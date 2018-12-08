@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 const path = require('path');
 const { checkJsVersion, getFiles, parseEs6, parseEs5, parseExportedData} = require('./utils');
 
@@ -11,14 +12,13 @@ let PATH_TO_DIR = path.join(__dirname, DIRECTORY);
 (async () => {
     let files = await getFiles(PATH_TO_DIR);
     let exportedData = await getExportedData(files);
-    console.log(parseExportedData(exportedData));
+    let data = parseExportedData(exportedData)
+    await createIndexFile(data);
 })();
 
-
-let file = "example.txt";
-let file1 = "example-es5.js";
-let file2 = "example-es6.js";
-let file3 = "example-es7.jsx";
+function createIndexFile(data) {
+    return writeFile(path.join(PATH_TO_DIR, 'index.js'), data, 'utf-8');
+}
 
 async function getExportedData(files) {
     let exportedData = [];

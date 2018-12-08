@@ -7,10 +7,30 @@ function parseExportedData(data) {
 
     data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source }, index) => {
         if(ExportDefaultDeclaration && ExportNamedDeclaration.length > 0) {
-            let importStatement = buildImportStatement(
-                `${checkImport(ExportDefaultDeclaration)}, { ${checkImportArray(ExportNamedDeclaration).join(', ')} }`,
-                source
-            )
+
+
+            let importDisplayName = checkImport(ExportDefaultDeclaration)
+            let importStatement = null;
+
+
+            if(Array.isArray(importDisplayName)) {
+
+               let importByNames = checkImportArray(ExportNamedDeclaration)
+                importByNames.unshift(importDisplayName[0]);
+                importByNames = importByNames.join(", ");
+
+
+                importStatement = buildImportStatement(
+                    `{${importByNames}}`,
+                    source
+                )
+            } else {
+                importStatement = buildImportStatement(
+                    `${importDisplayName}, {${checkImportArray(ExportNamedDeclaration).join(', ')} }`,
+                    source
+                )
+            }
+
             importStatements.push(importStatement)
         } else if(ExportDefaultDeclaration) {
             let importStatement = buildImportStatement(checkImport(ExportDefaultDeclaration), source);
@@ -18,18 +38,24 @@ function parseExportedData(data) {
         }
     })
 
+    return buildResponse()
+}
 
-    return {
-        importStatements,
-        exportStatement: importStatementsUsed
-    }
+const buildResponse = () => {
+    let response = importStatements.join("\n");
+    response += "\n\n\n"
+    response += "export {\n"
+    Object.keys(importStatementsUsed).forEach(exportItem => response += ` ${exportItem},\n`);
+    response += "}"
+    return response;
 }
 
 const checkImport = (importDefaultName) => {
     if(importStatementsUsed[importDefaultName]) {
-        let newImportDefaultName = `${importDefaultName} as ${importDefaultName}${importDefaultName.length}`;
-        importStatementsUsed[`${importDefaultName}${importDefaultName.length}`] = newImportDefaultName;
-        return newImportDefaultName
+        let newImportDefaultName = `${importDefaultName}${importDefaultName.length}`;
+        let displayName = `default as ${newImportDefaultName}`;
+        importStatementsUsed[newImportDefaultName] = displayName;
+        return [displayName]
     }
 
     importStatementsUsed[importDefaultName] = importDefaultName;

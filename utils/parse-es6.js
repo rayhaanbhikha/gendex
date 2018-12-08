@@ -46,10 +46,10 @@ const getNameForExportNamedDeclaration = node => {
     } else if (declaration) {
         switch (declaration.type) {
             case 'VariableDeclaration': // export const/let
-                return declaration.declarations[0].id.name;
+                return [declaration.declarations[0].id.name];
             case 'ClassDeclaration': // export class
             case 'FunctionDeclaration': // export function a()
-                return declaration.id.name;
+                return [declaration.id.name];
         }
     } else {
         return []
