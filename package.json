@@ -1,0 +1,9 @@
+{
+  "name": "clean-up",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.2.0"
+  }
+}
