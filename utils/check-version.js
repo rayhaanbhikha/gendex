@@ -6,7 +6,7 @@ const checkJsVerson = file => {
     } else if (regEs6.test(file)) {
         return 'es6';
     } else {
-        return 'file does not export';
+        throw new Error('file does not export');
     }
 }
 
