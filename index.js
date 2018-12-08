@@ -2,7 +2,7 @@ const fs = require('fs');
 const {promisify} = require('util');
 const readFile = promisify(fs.readFile);
 const path = require('path');
-const {checkJsVersion, getFiles, parseEs6}= require('./utils');
+const {checkJsVersion, getFiles, parseEs6, parseEs5}= require('./utils');
 
 
 
@@ -22,9 +22,10 @@ let file2 = "example-es6.js";
 let file3 = "example-es7.jsx";
 
 
-let pathToFile = path.join(__dirname, file2);
+let pathToFile = path.join(__dirname, file1);
 
-console.log(parseEs6(pathToFile))
+// console.log(parseEs6(pathToFile))
+console.log(parseEs5(pathToFile))
 
 // readFile(pathToFile, "utf-8")
 //     .then(fileData => checkJsVersion(fileData))
