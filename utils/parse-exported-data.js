@@ -85,8 +85,6 @@ const checkImportArray = (importNames) => {
 
 const getNextIndex = (name) => {
     let importStatementsUsedArray = Object.getOwnPropertyNames(importStatementsUsed);
-    importStatementsUsedArray = importStatementsUsedArray.sort();
-
 
     let r = `^${name}\\_*\\d*$`
     let regex = RegExp(r, 'g');
