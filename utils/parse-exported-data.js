@@ -4,7 +4,7 @@ let importStatementsUsed = {}
 let importStatements = [];
 
 function parseExportedData(data) {
-
+    console.log(data);
     data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source }, index) => {
         if(ExportDefaultDeclaration && ExportNamedDeclaration.length > 0) {
 
@@ -35,8 +35,16 @@ function parseExportedData(data) {
         } else if(ExportDefaultDeclaration) {
             let importStatement = buildImportStatement(checkImport(ExportDefaultDeclaration), source);
             importStatements.push(importStatement)
+        } else if (ExportNamedDeclaration.length > 0) {
+            let importStatement = buildImportStatement(
+                `{${checkImportArray(ExportNamedDeclaration).join(', ')} }`,
+                source
+            )
+            importStatements.push(importStatement);
         }
     })
+
+    // console.log(importStatementsUsed);
 
     return buildResponse()
 }
@@ -52,7 +60,7 @@ const buildResponse = () => {
 
 const checkImport = (importDefaultName) => {
     if(importStatementsUsed[importDefaultName]) {
-        let newImportDefaultName = `${importDefaultName}${importDefaultName.length}`;
+        let newImportDefaultName = getNextIndex(importDefaultName);
         let displayName = `default as ${newImportDefaultName}`;
         importStatementsUsed[newImportDefaultName] = displayName;
         return [displayName]
@@ -65,7 +73,7 @@ const checkImport = (importDefaultName) => {
 const checkImportArray = (importNames) => {
     return importNames.map(name => {
         if(importStatementsUsed[name]) {
-            let newName = `${name}${name.length}`
+            let newName = getNextIndex(name)
             let displayName = `${name} as ${newName}`
             importStatementsUsed[newName] = newName
             return displayName
@@ -73,6 +81,30 @@ const checkImportArray = (importNames) => {
         importStatementsUsed[name] = name
         return name
     })
+}
+
+const getNextIndex = (name) => {
+    let importStatementsUsedArray = Object.getOwnPropertyNames(importStatementsUsed);
+    importStatementsUsedArray = importStatementsUsedArray.sort();
+
+
+    let r = `^${name}\\_*\\d*$`
+    let regex = RegExp(r, 'g');
+
+
+    let matches = importStatementsUsedArray.filter(importName => importName.search(regex) > -1 )
+
+    let lastIndex = matches.reverse()[0]
+
+    let newR = /(\w*_)(\d*)$/g
+    let regexResult = newR.exec(lastIndex);
+
+    let newIndex = regexResult ? 
+        `${regexResult[1]}${Number(regexResult[2])+1}`
+        :
+        `${lastIndex}_1`;
+
+    return newIndex
 }
 
 module.exports = parseExportedData;
