@@ -1,14 +1,25 @@
 const getExports = (pathToFile) => {
-    let fileExports = require(pathToFile);
+    let exportsInFile = require(pathToFile);
     let fileName = pathToFile.split("/").reverse()[0]
 
-    switch  (typeof fileExports) {
+
+    let fileExports = {
+        ExportDefaultDeclaration: null,
+        ExportNamedDeclaration: []
+    }
+
+    switch  (typeof exportsInFile) {
         case 'string':
         case 'function':
-            return sanitizeFileName(fileName);
+            fileExports.ExportDefaultDeclaration = sanitizeFileName(fileName);
+            break;
         case 'object':
-            return fileExports;
+            for (let exportName in exportsInFile) {
+                fileExports.ExportNamedDeclaration.push(exportName)
+            }
+            break;
     }
+    return fileExports
 }
 
 const sanitizeFileName = (fileName="A") => {
