@@ -5,7 +5,7 @@ const getExports = (pathToFile) => {
     switch  (typeof fileExports) {
         case 'string':
         case 'function':
-            return sanitizeFileName(fileName);;
+            return sanitizeFileName(fileName);
         case 'object':
             return fileExports;
     }
@@ -18,9 +18,8 @@ const sanitizeFileName = (fileName="A") => {
     return fileName
 }
 
-let reducer = (ac, fc) => {
-    fc = fc.substring(0,1).toUpperCase() + fc.substring(1)
-    return ac+fc
+let reducer = (a, b) => {
+    return a+b.substring(0,1).toUpperCase() + b.substring(1)
 }
 
 module.exports = getExports

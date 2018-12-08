@@ -1,6 +1,10 @@
 const checkJsVerson = file => {
-    let regEs5 = RegExp('^(module.exports(\ .*|\t.*)=)','g')
-    let regEs6 = RegExp('^(export\ |export\ default)', 'g');
+    let resEs5Expression = '((module.exports)|(exports.(\w+)))(\ .*|\t.*)='
+    let resEs6Expression = '^(export\ |export\ default)'
+
+    let regEs5 = RegExp(resEs5Expression,'g')
+    let regEs6 = RegExp(resEs6Expression, 'g');
+    
     if(regEs5.test(file)) {
         return 'es5';
     } else if (regEs6.test(file)) {
