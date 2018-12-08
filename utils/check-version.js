@@ -1,6 +1,6 @@
 const checkJsVerson = file => {
     let resEs5Expression = '((module.exports)|(exports.(\w+)))(\ .*|\t.*)='
-    let resEs6Expression = '^(export\ |export\ default)'
+    let resEs6Expression = '(export\ )'
 
     let regEs5 = RegExp(resEs5Expression,'g')
     let regEs6 = RegExp(resEs6Expression, 'g');
