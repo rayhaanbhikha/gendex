@@ -1,7 +1,8 @@
 const path = require('path');
 const {
     createIndexFileInDir,
-    getFiles
+    getFiles,
+    getIndexFile
 } = require('./utils');
 
 
@@ -19,7 +20,7 @@ let config = {
 
 let config2 = {
     DEFAULT_VERSION: 'es6',
-    DIRECTORY: 'test-cases/test-2',
+    DIRECTORY: 'test-cases',
     get PATH_TO_DIR() {
         return path.join(__dirname, this.DIRECTORY)
     },
@@ -43,8 +44,9 @@ let fileTreeMap = {};
             )
         }
 
-
-        // await createIndexFileInDir(config)
+        // let files = await getIndexFile("/home/rayhaanbhikha/projects/clean-up/test-cases/test-2/es6");
+        // console.log(files)
+        // await createIndexFileInDir("/home/rayhaanbhikha/projects/clean-up/test-cases/test-2/es6", config.VERSION, files, config2.PATH_TO_DIR);
         // await createIndexFileInDir(config2)
     } catch (error) {
         console.log(error);

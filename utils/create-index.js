@@ -5,9 +5,20 @@ const path = require('path');
 const { parseExportedDataAsEs5 } = require('./es5');
 const { parseExportedDataAsEs6 } = require('./es6');
 const getExportedData = require('./get-exported-data')
-const getFiles = require('./get-files')
+const { getFiles } = require('./get-files')
 
-async function createIndexFileInDir(PATH_TO_DIR, VERSION, files) {
+async function createIndexFileInDir(PATH_TO_DIR, VERSION, files = null, PATH_TO_OUTPUT_DIR = null) {
+
+    if (!files) {
+        files = await getFiles(PATH_TO_DIR);
+        files = files.map(file => file.name);
+    }
+
+    if (!PATH_TO_OUTPUT_DIR) {
+        PATH_TO_OUTPUT_DIR = PATH_TO_DIR;
+    }
+
+
     let exportedData = await getExportedData(files, PATH_TO_DIR);
     let data = null;
     if (VERSION === 'es5') {
@@ -15,7 +26,7 @@ async function createIndexFileInDir(PATH_TO_DIR, VERSION, files) {
     } else {
         data = parseExportedDataAsEs6(exportedData)
     }
-    return await createIndexFile(data, PATH_TO_DIR);
+    return await createIndexFile(data, PATH_TO_OUTPUT_DIR);
 }
 
 function createIndexFile(data, PATH_TO_DIR) {
