@@ -16,7 +16,6 @@ async function createIndexFileInDir({ PATH_TO_DIR, VERSION }) {
     } else {
         data = parseExportedDataAsEs6(exportedData)
     }
-    console.log(data);
     return await createIndexFile(data, PATH_TO_DIR);
 }
 
