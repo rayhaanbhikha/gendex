@@ -24,9 +24,15 @@ function readFromFile(pathToFile) {
         .then(fileData => checkJsVersion(fileData))
         .then(version => {
             if (version == 'es5') {
-                return parseEs5(pathToFile)
+                return {
+                    ...parseEs5(pathToFile),
+                    version: 'es5'
+                }
             } else {
-                return parseEs6(pathToFile)
+                return {
+                    ...parseEs6(pathToFile),
+                    version: 'es6'
+                }
             }
         })
         .catch(error => error.message);
