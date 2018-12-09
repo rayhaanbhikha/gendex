@@ -40,7 +40,9 @@ let fileTreeMap = {};
          * 
          */
 
-        await createMasterIndexFile(config.PATH_TO_DIR, config.VERSION, fileTreeMap)
+        //FIXME: needs refactoring still. master index does not merge existing index files.
+
+        // await createMasterIndexFile(config.PATH_TO_DIR, config.VERSION, fileTreeMap)
     } catch (error) {
         console.log(error);
     }
