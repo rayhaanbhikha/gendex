@@ -7,22 +7,28 @@ const {
     createIndexFile
 } = require('./utils');
 
-
-let DIRECTORY = 'test'
-let PATH_TO_DIR = path.join(__dirname, DIRECTORY);
-let VERSION = (process.argv[2] && process.argv[2] === 'es5') ? 'es5' : 'es6';
+let config = {
+    DEFAULT_VERSION: 'es6',
+    DIRECTORY: 'test',
+    get PATH_TO_DIR() {
+        return path.join(__dirname, this.DIRECTORY)
+    },
+    get VERSION() {
+        return (process.argv[2] && process.argv[2] === 'es5') ? 'es5' : this.DEFAULT_VERSION
+    }
+};
 
 (async () => {
     try {
-        let files = await getFiles(PATH_TO_DIR);
-        let exportedData = await getExportedData(files, PATH_TO_DIR);
+        let files = await getFiles(config.PATH_TO_DIR);
+        let exportedData = await getExportedData(files, config.PATH_TO_DIR);
         let data = null;
-        if (VERSION === 'es5') {
+        if (config.VERSION === 'es5') {
             data = parseExportedDataAsEs5(exportedData)
         } else {
             data = parseExportedDataAsEs6(exportedData)
         }
-        await createIndexFile(data, PATH_TO_DIR);
+        await createIndexFile(data, config.PATH_TO_DIR);
     } catch (error) {
         console.log(error);
     }
