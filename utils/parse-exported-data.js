@@ -4,18 +4,17 @@ let importStatementsUsed = {}
 let importStatements = [];
 
 function parseExportedData(data) {
-    console.log(data);
     data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source }, index) => {
-        if(ExportDefaultDeclaration && ExportNamedDeclaration.length > 0) {
+        if (ExportDefaultDeclaration && ExportNamedDeclaration.length > 0) {
 
 
             let importDisplayName = checkImport(ExportDefaultDeclaration)
             let importStatement = null;
 
 
-            if(Array.isArray(importDisplayName)) {
+            if (Array.isArray(importDisplayName)) {
 
-               let importByNames = checkImportArray(ExportNamedDeclaration)
+                let importByNames = checkImportArray(ExportNamedDeclaration)
                 importByNames.unshift(importDisplayName[0]);
                 importByNames = importByNames.join(", ");
 
@@ -32,7 +31,7 @@ function parseExportedData(data) {
             }
 
             importStatements.push(importStatement)
-        } else if(ExportDefaultDeclaration) {
+        } else if (ExportDefaultDeclaration) {
             let importStatement = buildImportStatement(checkImport(ExportDefaultDeclaration), source);
             importStatements.push(importStatement)
         } else if (ExportNamedDeclaration.length > 0) {
@@ -59,7 +58,7 @@ const buildResponse = () => {
 }
 
 const checkImport = (importDefaultName) => {
-    if(importStatementsUsed[importDefaultName]) {
+    if (importStatementsUsed[importDefaultName]) {
         let newImportDefaultName = getNextIndex(importDefaultName);
         let displayName = `default as ${newImportDefaultName}`;
         importStatementsUsed[newImportDefaultName] = displayName;
@@ -72,7 +71,7 @@ const checkImport = (importDefaultName) => {
 
 const checkImportArray = (importNames) => {
     return importNames.map(name => {
-        if(importStatementsUsed[name]) {
+        if (importStatementsUsed[name]) {
             let newName = getNextIndex(name)
             let displayName = `${name} as ${newName}`
             importStatementsUsed[newName] = newName
@@ -90,15 +89,15 @@ const getNextIndex = (name) => {
     let regex = RegExp(r, 'g');
 
 
-    let matches = importStatementsUsedArray.filter(importName => importName.search(regex) > -1 )
+    let matches = importStatementsUsedArray.filter(importName => importName.search(regex) > -1)
 
     let lastIndex = matches.reverse()[0]
 
     let newR = /(\w*_)(\d*)$/g
     let regexResult = newR.exec(lastIndex);
 
-    let newIndex = regexResult ? 
-        `${regexResult[1]}${Number(regexResult[2])+1}`
+    let newIndex = regexResult ?
+        `${regexResult[1]}${Number(regexResult[2]) + 1}`
         :
         `${lastIndex}_1`;
 

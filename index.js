@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const path = require('path');
-const { checkJsVersion, getFiles, parseEs6, parseEs5, parseExportedData} = require('./utils');
+const { checkJsVersion, getFiles, parseEs6, parseEs5, parseExportedData } = require('./utils');
 
 
 let DIRECTORY = 'test'
