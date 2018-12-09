@@ -23,7 +23,7 @@ const buildImportStatement = (name, source) => `const ${name} = require(${source
 
 const buildExportStatement = (exportStatements) => {
     let response = "module.exports = {\n"
-    Object.keys(exportStatements).forEach(exportItem => response += ` ${exportItem},\n`);
+    Object.keys(exportStatements).forEach(exportItem => response += `\t${exportItem},\n`);
     response += "}"
     return response;
 }
@@ -38,7 +38,7 @@ const buildResponse = () => {
 const checkImport = (importDefaultName) => {
     if (importStatementsUsed[importDefaultName]) {
         let newImportDefaultName = getNextIndex(importDefaultName);
-        let displayName = `default as ${newImportDefaultName}`;
+        let displayName = `default: ${newImportDefaultName}`;
         importStatementsUsed[newImportDefaultName] = displayName;
         return [displayName]
     }
@@ -51,7 +51,7 @@ const checkImportArray = (importNames) => {
     return importNames.map(name => {
         if (importStatementsUsed[name]) {
             let newName = getNextIndex(name)
-            let displayName = `${name} as ${newName}`
+            let displayName = `${name}: ${newName}`
             importStatementsUsed[newName] = newName
             return displayName
         }

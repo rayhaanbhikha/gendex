@@ -48,7 +48,7 @@ const buildImportStatement = (name, source) => `import ${name} from ${source}`
 
 const buildExportStatement = (exportStatements) => {
     let response = "export {\n"
-    Object.keys(exportStatements).forEach(exportItem => response += ` ${exportItem},\n`);
+    Object.keys(exportStatements).forEach(exportItem => response += `\t${exportItem},\n`);
     response += "}"
     return response;
 }
