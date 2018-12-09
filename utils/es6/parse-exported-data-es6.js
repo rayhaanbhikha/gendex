@@ -1,10 +1,10 @@
-const buildImportStatement = (name, source) => `import ${name} from ${source}`
-
 let importStatementsUsed = {}
 let importStatements = [];
 
 function parseExportedData(data) {
-    data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source }, index) => {
+    console.log(data);
+    data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source }) => {
+
         if (ExportDefaultDeclaration && ExportNamedDeclaration.length > 0) {
 
 
@@ -42,18 +42,22 @@ function parseExportedData(data) {
             importStatements.push(importStatement);
         }
     })
-
-    // console.log(importStatementsUsed);
-
     return buildResponse()
+}
+
+const buildImportStatement = (name, source) => `import ${name} from ${source}`
+
+const buildExportStatement = (exportStatements) => {
+    let response = "export {\n"
+    Object.keys(exportStatements).forEach(exportItem => response += ` ${exportItem},\n`);
+    response += "}"
+    return response;
 }
 
 const buildResponse = () => {
     let response = importStatements.join("\n");
     response += "\n\n\n"
-    response += "export {\n"
-    Object.keys(importStatementsUsed).forEach(exportItem => response += ` ${exportItem},\n`);
-    response += "}"
+    response += buildExportStatement(importStatementsUsed);
     return response;
 }
 
