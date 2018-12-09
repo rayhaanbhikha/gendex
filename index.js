@@ -3,6 +3,7 @@ const {
     getFiles,
     getExportedData,
     parseExportedDataAsEs6,
+    parseExportedDataAsEs5,
     createIndexFile
 } = require('./utils');
 
@@ -21,8 +22,7 @@ let VERSION = (process.argv[2] && process.argv[2] === 'es5') ? 'es5' : 'es6';
         } else {
             data = parseExportedDataAsEs6(exportedData)
         }
-        console.log(data);
-        // await createIndexFile(data, PATH_TO_DIR);
+        await createIndexFile(data, PATH_TO_DIR);
     } catch (error) {
         console.log(error);
     }

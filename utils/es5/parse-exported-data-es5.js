@@ -2,35 +2,10 @@ let importStatementsUsed = {}
 let importStatements = [];
 
 function parseExportedData(data) {
+    data = data.filter(({ version }) => version === 'es5');
     data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source }) => {
 
-        if (ExportDefaultDeclaration && ExportNamedDeclaration.length > 0) {
-
-
-            let importDisplayName = checkImport(ExportDefaultDeclaration)
-            let importStatement = null;
-
-
-            if (Array.isArray(importDisplayName)) {
-
-                let importByNames = checkImportArray(ExportNamedDeclaration)
-                importByNames.unshift(importDisplayName[0]);
-                importByNames = importByNames.join(", ");
-
-
-                importStatement = buildImportStatement(
-                    `{${importByNames}}`,
-                    source
-                )
-            } else {
-                importStatement = buildImportStatement(
-                    `${importDisplayName}, {${checkImportArray(ExportNamedDeclaration).join(', ')} }`,
-                    source
-                )
-            }
-
-            importStatements.push(importStatement)
-        } else if (ExportDefaultDeclaration) {
+        if (ExportDefaultDeclaration) {
             let importStatement = buildImportStatement(checkImport(ExportDefaultDeclaration), source);
             importStatements.push(importStatement)
         } else if (ExportNamedDeclaration.length > 0) {
@@ -44,10 +19,10 @@ function parseExportedData(data) {
     return buildResponse()
 }
 
-const buildImportStatement = (name, source) => `import ${name} from ${source}`
+const buildImportStatement = (name, source) => `const ${name} = require(${source});`
 
 const buildExportStatement = (exportStatements) => {
-    let response = "export {\n"
+    let response = "module.exports = {\n"
     Object.keys(exportStatements).forEach(exportItem => response += ` ${exportItem},\n`);
     response += "}"
     return response;
