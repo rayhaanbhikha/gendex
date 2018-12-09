@@ -1,6 +1,10 @@
-
 const path = require('path');
-const { getFiles, parseExportedData, getExportedData, createIndexFile } = require('./utils');
+const {
+    getFiles,
+    getExportedData,
+    parseExportedData,
+    createIndexFile
+} = require('./utils');
 
 
 let DIRECTORY = 'test'
@@ -16,8 +20,3 @@ let PATH_TO_DIR = path.join(__dirname, DIRECTORY);
         console.log(error);
     }
 })();
-
-
-
-
-
