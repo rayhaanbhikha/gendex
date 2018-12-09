@@ -1,15 +1,11 @@
 const path = require('path');
 const {
-    getFiles,
-    getExportedData,
-    parseExportedDataAsEs6,
-    parseExportedDataAsEs5,
-    createIndexFile
+    createIndexFileInDir
 } = require('./utils');
 
 let config = {
     DEFAULT_VERSION: 'es6',
-    DIRECTORY: 'test',
+    DIRECTORY: 'test-cases/test-2',
     get PATH_TO_DIR() {
         return path.join(__dirname, this.DIRECTORY)
     },
@@ -20,15 +16,7 @@ let config = {
 
 (async () => {
     try {
-        let files = await getFiles(config.PATH_TO_DIR);
-        let exportedData = await getExportedData(files, config.PATH_TO_DIR);
-        let data = null;
-        if (config.VERSION === 'es5') {
-            data = parseExportedDataAsEs5(exportedData)
-        } else {
-            data = parseExportedDataAsEs6(exportedData)
-        }
-        await createIndexFile(data, config.PATH_TO_DIR);
+        await createIndexFileInDir(config)
     } catch (error) {
         console.log(error);
     }

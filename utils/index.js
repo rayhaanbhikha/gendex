@@ -3,7 +3,7 @@ const getFiles = require('./get-files');
 const { parseEs6, parseExportedDataAsEs6 } = require('./es6');
 const { parseEs5, parseExportedDataAsEs5 } = require('./es5');
 const getExportedData = require('./get-exported-data')
-const createIndexFile = require('./create-index')
+const createIndexFileInDir = require('./create-index')
 
 module.exports = {
     checkJsVersion,
@@ -13,5 +13,5 @@ module.exports = {
     parseEs5,
     parseExportedDataAsEs5,
     getExportedData,
-    createIndexFile
+    createIndexFileInDir
 }
