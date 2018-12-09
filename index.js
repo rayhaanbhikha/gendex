@@ -1,24 +1,13 @@
 const path = require('path');
 const {
     createIndexFileInDir,
+    createMasterIndexFile,
     getFiles,
-    getIndexFile
 } = require('./utils');
 
 
 
 let config = {
-    DEFAULT_VERSION: 'es6',
-    DIRECTORY: 'test-cases',
-    get PATH_TO_DIR() {
-        return path.join(__dirname, this.DIRECTORY)
-    },
-    get VERSION() {
-        return (process.argv[2] && process.argv[2] === 'es5') ? 'es5' : this.DEFAULT_VERSION
-    }
-};
-
-let config2 = {
     DEFAULT_VERSION: 'es6',
     DIRECTORY: 'test-cases',
     get PATH_TO_DIR() {
@@ -44,10 +33,14 @@ let fileTreeMap = {};
             )
         }
 
-        // let files = await getIndexFile("/home/rayhaanbhikha/projects/clean-up/test-cases/test-2/es6");
-        // console.log(files)
-        // await createIndexFileInDir("/home/rayhaanbhikha/projects/clean-up/test-cases/test-2/es6", config.VERSION, files, config2.PATH_TO_DIR);
-        // await createIndexFileInDir(config2)
+        /**
+         * 
+         * once we get here each key in file treemap should represent a location
+         * where an index file exists.
+         * 
+         */
+
+        await createMasterIndexFile(config.PATH_TO_DIR, config.VERSION, fileTreeMap)
     } catch (error) {
         console.log(error);
     }
