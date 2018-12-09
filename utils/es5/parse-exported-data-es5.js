@@ -1,22 +1,23 @@
-let importStatementsUsed = {}
-let importStatements = [];
-
 function parseExportedData(data) {
+    let importStatementsUsed = {}
+    let importStatements = [];
+
     data = data.filter(({ version }) => version === 'es5');
     data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source }) => {
 
         if (ExportDefaultDeclaration) {
-            let importStatement = buildImportStatement(checkImport(ExportDefaultDeclaration), source);
+            let importStatement = buildImportStatement(
+                checkImport(ExportDefaultDeclaration, importStatementsUsed), source);
             importStatements.push(importStatement)
         } else if (ExportNamedDeclaration.length > 0) {
             let importStatement = buildImportStatement(
-                `{ ${checkImportArray(ExportNamedDeclaration).join(', ')} }`,
+                `{ ${checkImportArray(ExportNamedDeclaration, importStatementsUsed).join(', ')} }`,
                 source
             )
             importStatements.push(importStatement);
         }
     })
-    return buildResponse()
+    return buildResponse(importStatements, importStatementsUsed)
 }
 
 const buildImportStatement = (name, source) => `const ${name} = require(${source});`
@@ -28,16 +29,16 @@ const buildExportStatement = (exportStatements) => {
     return response;
 }
 
-const buildResponse = () => {
+const buildResponse = (importStatements, importStatementsUsed) => {
     let response = importStatements.join("\n");
     response += "\n\n\n"
     response += buildExportStatement(importStatementsUsed);
     return response;
 }
 
-const checkImport = (importDefaultName) => {
+const checkImport = (importDefaultName, importStatementsUsed) => {
     if (importStatementsUsed[importDefaultName]) {
-        let newImportDefaultName = getNextIndex(importDefaultName);
+        let newImportDefaultName = getNextIndex(importDefaultName, importStatementsUsed);
         let displayName = `default: ${newImportDefaultName}`;
         importStatementsUsed[newImportDefaultName] = displayName;
         return [displayName]
@@ -47,10 +48,10 @@ const checkImport = (importDefaultName) => {
     return importDefaultName
 }
 
-const checkImportArray = (importNames) => {
+const checkImportArray = (importNames, importStatementsUsed) => {
     return importNames.map(name => {
         if (importStatementsUsed[name]) {
-            let newName = getNextIndex(name)
+            let newName = getNextIndex(name, importStatementsUsed)
             let displayName = `${name}: ${newName}`
             importStatementsUsed[newName] = newName
             return displayName
@@ -60,7 +61,7 @@ const checkImportArray = (importNames) => {
     })
 }
 
-const getNextIndex = (name) => {
+const getNextIndex = (name, importStatementsUsed) => {
     let importStatementsUsedArray = Object.getOwnPropertyNames(importStatementsUsed);
 
     let r = `^${name}\\_*\\d*$`

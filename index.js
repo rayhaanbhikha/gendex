@@ -14,9 +14,12 @@ let config = {
     }
 };
 
+let config2 = Object.assign({}, config, { DIRECTORY: 'test-cases/test-2' });
+console.log(config2, config);
 (async () => {
     try {
         await createIndexFileInDir(config)
+        await createIndexFileInDir(config2)
     } catch (error) {
         console.log(error);
     }
