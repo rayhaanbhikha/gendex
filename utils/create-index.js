@@ -7,8 +7,7 @@ const { parseExportedDataAsEs6 } = require('./es6');
 const getExportedData = require('./get-exported-data')
 const getFiles = require('./get-files')
 
-async function createIndexFileInDir({ PATH_TO_DIR, VERSION }) {
-    let files = await getFiles(PATH_TO_DIR);
+async function createIndexFileInDir(PATH_TO_DIR, VERSION, files) {
     let exportedData = await getExportedData(files, PATH_TO_DIR);
     let data = null;
     if (VERSION === 'es5') {

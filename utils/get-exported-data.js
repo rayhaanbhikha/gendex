@@ -3,15 +3,17 @@ const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
 const path = require('path');
 const checkJsVersion = require('./check-version')
-const parseEs5 = require('./es5/parse-es5')
-const parseEs6 = require('./es6/parse-es6')
+const { parseEs5 } = require('./es5')
+const { parseEs6 } = require('./es6')
 
 async function getExportedData(files, PATH_TO_DIR) {
     let exportedData = [];
     for (let file in files) {
         let fileName = files[file];
         let pathToFile = path.join(PATH_TO_DIR, fileName);
+
         let response = await readFromFile(pathToFile);
+
         response.source = `"./${fileName}"`;
         exportedData.push(response);
     }

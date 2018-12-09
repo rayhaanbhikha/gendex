@@ -1,4 +1,4 @@
-const {transformSync} = require("@babel/core/lib/transform")
+const { transformSync } = require("@babel/core/lib/transform")
 const fs = require('fs');
 
 const getExports = (pathToFile) => {
