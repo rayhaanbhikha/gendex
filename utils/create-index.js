@@ -22,7 +22,7 @@ async function createIndexFileInDir(
         data = parseExportedDataAsEs6(exportedData)
     }
     await createIndexFile(data, PATH_TO_DIR);
-    return exportedData;
+    return exportedData; // this data is what is used in the index.js file - we used this to put in the parent directory.
 }
 
 
@@ -64,7 +64,7 @@ async function generateIndexFile(PATH_TO_DIR, VERSION) {
     fileNodeTree = fileNodeTree.sort(compareDepth);
 
 
-
+    // 3. create index at each node.
     let fileNodeTreeLength = fileNodeTree.length;
     for (let nodeIndex in fileNodeTree) {
         let { pathToDir, files, additionalExportData } = fileNodeTree[nodeIndex];
@@ -72,6 +72,7 @@ async function generateIndexFile(PATH_TO_DIR, VERSION) {
             let data = await createIndexFileInDir(pathToDir, VERSION, files, additionalExportData);
 
             if (nodeIndex != fileNodeTreeLength - 1) {
+                // 4. take generated exported data and pass to parent directory.
                 let { fileName, parentDir } = getParentDirAndFileName(pathToDir)
                 let newExportedData = mergeExportData(data, fileName, VERSION);
                 fileNodeTree = fileNodeTree.map(node => {
@@ -84,7 +85,6 @@ async function generateIndexFile(PATH_TO_DIR, VERSION) {
                     }
                     return node
                 })
-                // fileNodeTree[nodeIndex + 1].additionalExportData = newExportedData
             }
 
         } catch (error) {
@@ -130,10 +130,6 @@ function getParentDirAndFileName(PATH_TO_DIR) {
         parentDir,
         fileName
     }
-}
-
-function createFileInParent(parentDir, fileName, data) {
-    return writeFile(path.join(parentDir, `${fileName}.js`), data, 'utf-8')
 }
 
 module.exports = generateIndexFile;
