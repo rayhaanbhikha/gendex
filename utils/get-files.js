@@ -31,8 +31,9 @@ async function getFiles(dir, filterOptions) {
             }
         }
 
+        // return files.map(file => file.name);
 
-        return files.map(file => file.name);
+        return files;
 
     } catch (error) {
         console.log(error.message);
@@ -47,7 +48,7 @@ function filterByFilesAndFolders(files) {
 
 function filterByFilesOnly(files) {
     return files.filter(file =>
-        RegExp("(.js|.jsx)$").test(file.name) && file.name != "index.js"
+        (RegExp("(.js|.jsx)$").test(file.name) || file.isDirectory()) && file.name != "index.js"
     )
 }
 

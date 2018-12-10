@@ -1,7 +1,6 @@
 const path = require('path');
 const {
-    createIndexFileInDir,
-    createMasterIndexFile,
+    generateIndexFile,
     getFiles,
 } = require('./utils');
 
@@ -22,16 +21,26 @@ let fileTreeMap = {};
 
 (async () => {
     try {
-        await traverseFileTreeInDir(config)
+        // await traverseFileTreeInDir(config)
 
-        for (let pathToDir in fileTreeMap) {
-            let files = fileTreeMap[pathToDir];
-            await createIndexFileInDir(
-                pathToDir,
-                config.VERSION,
-                files
-            )
-        }
+        // for (let pathToDir in fileTreeMap) {
+        //     let files = fileTreeMap[pathToDir];
+        //     await createIndexFileInDir(
+        //         pathToDir,
+        //         config.VERSION,
+        //         files
+        //     )
+        // }
+
+
+
+
+        await generateIndexFile(
+            config.PATH_TO_DIR, config.VERSION)
+
+
+
+
 
         /**
          * 

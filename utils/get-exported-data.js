@@ -15,6 +15,7 @@ async function getExportedData(files, PATH_TO_DIR) {
         let response = await readFromFile(pathToFile);
 
         response.source = `"./${fileName}"`;
+
         exportedData.push(response);
     }
     return exportedData
