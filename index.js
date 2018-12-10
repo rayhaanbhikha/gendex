@@ -21,37 +21,9 @@ let fileTreeMap = {};
 
 (async () => {
     try {
-        // await traverseFileTreeInDir(config)
-
-        // for (let pathToDir in fileTreeMap) {
-        //     let files = fileTreeMap[pathToDir];
-        //     await createIndexFileInDir(
-        //         pathToDir,
-        //         config.VERSION,
-        //         files
-        //     )
-        // }
-
-
-
-
         await generateIndexFile(
             config.PATH_TO_DIR, config.VERSION)
 
-
-
-
-
-        /**
-         * 
-         * once we get here each key in file treemap should represent a location
-         * where an index file exists.
-         * 
-         */
-
-        //FIXME: needs refactoring still. master index does not merge existing index files.
-
-        // await createMasterIndexFile(config.PATH_TO_DIR, config.VERSION, fileTreeMap)
     } catch (error) {
         console.log(error);
     }

@@ -8,54 +8,132 @@ const getExportedData = require('./get-exported-data')
 const { getFiles } = require('./get-files')
 
 async function createIndexFileInDir(
-    PATH_TO_DIR, VERSION, collectedData) {
+    PATH_TO_DIR, VERSION, files, additionalExportData = null) {
 
 
-    let files = await getFiles(PATH_TO_DIR); // get files + folders in directory.
+    let exportedData = await getExportedData(files, PATH_TO_DIR);
+    if (additionalExportData) {
+        exportedData.push(...additionalExportData);
+    }
+    let data = null;
+    if (VERSION === 'es5') {
+        data = parseExportedDataAsEs5(exportedData)
+    } else {
+        data = parseExportedDataAsEs6(exportedData)
+    }
+    await createIndexFile(data, PATH_TO_DIR);
+    return exportedData;
+}
+
+
+async function generateNodes(dir, fileNodeTree) {
+    let files = await getFiles(dir); // get files + folders in directory.
 
     // loop through files, recursively calling this function if there is a nested directory.
-    files.forEach(async (file) => {
+    for (let fileIndex in files) {
+        let file = files[fileIndex];
         if (file.isDirectory()) {
-            await createIndexFileInDir(
-                `${PATH_TO_DIR}/${file.name}`,
-                VERSION,
-                collectedData,
+            await generateNodes(
+                `${dir}/${file.name}`,
+                fileNodeTree,
             )
         }
+    }
+
+    fileNodeTree.push({
+        pathToDir: dir,
+        files: files.filter(file => !file.isDirectory()).map(file => file.name),
     });
+}
 
-    // if in file list there is a directory remove and keep only file names.
-    files = files.filter(file => !file.isDirectory()).map(file => file.name);
+function compareDepth(a, b) {
+    let aLength = a.pathToDir.split("/").length;
+    let bLength = b.pathToDir.split("/").length;
 
-    console.log(files);
-    // let exportedData = await getExportedData(files, PATH_TO_DIR);
-    // collectedData.push(...exportedData);
-
-    // let data = null;
-    // if (VERSION === 'es5') {
-    //     data = parseExportedDataAsEs5(exportedData)
-    // } else {
-    //     data = parseExportedDataAsEs6(exportedData)
-    // }
-    // return await createIndexFile(data, PATH_TO_DIR);
+    if (aLength < bLength) return 1;
+    return 0
 }
 
 async function generateIndexFile(PATH_TO_DIR, VERSION) {
-    let collectedData = []
-    await createIndexFileInDir(PATH_TO_DIR, VERSION, collectedData);
 
-    // let data = null;
-    // if (VERSION === 'es5') {
-    //     data = parseExportedDataAsEs5(collectedData)
-    // } else {
-    //     data = parseExportedDataAsEs6(collectedData)
-    // }
+    let fileNodeTree = []
+    // 1. generate node tree
+    await generateNodes(PATH_TO_DIR, fileNodeTree, 1);
 
-    // return await createIndexFile(data, PATH_TO_DIR);
+    // 2. sort nodes in reverse order, with most deep level node as the first item in array.
+    fileNodeTree = fileNodeTree.sort(compareDepth);
+
+
+
+    let fileNodeTreeLength = fileNodeTree.length;
+    for (let nodeIndex in fileNodeTree) {
+        let { pathToDir, files, additionalExportData } = fileNodeTree[nodeIndex];
+        try {
+            let data = await createIndexFileInDir(pathToDir, VERSION, files, additionalExportData);
+
+            if (nodeIndex != fileNodeTreeLength - 1) {
+                let { fileName, parentDir } = getParentDirAndFileName(pathToDir)
+                let newExportedData = mergeExportData(data, fileName, VERSION);
+                fileNodeTree = fileNodeTree.map(node => {
+                    if (node.pathToDir === parentDir) {
+                        if (node.additionalExportData && node.additionalExportData.length > 0) {
+                            node.additionalExportData.push(newExportedData);
+                        } else {
+                            node.additionalExportData = [newExportedData]
+                        }
+                    }
+                    return node
+                })
+                // fileNodeTree[nodeIndex + 1].additionalExportData = newExportedData
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
+
+
+function mergeExportData(exportedData, fileName, version) {
+    let newExportedData = {
+        ExportDefaultDeclaration: null,
+        ExportNamedDeclaration: [],
+        version,
+        source: `"./${fileName}"`
+    }
+
+    exportedData.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration }) => {
+        if (ExportDefaultDeclaration && ExportNamedDeclaration.length > 0) {
+            newExportedData.ExportNamedDeclaration.push(ExportDefaultDeclaration);
+            newExportedData.ExportNamedDeclaration.push(...ExportNamedDeclaration);
+        } else if (ExportDefaultDeclaration) {
+            newExportedData.ExportNamedDeclaration.push(ExportDefaultDeclaration);
+        } else if (ExportNamedDeclaration.length > 0) {
+            newExportedData.ExportNamedDeclaration.push(...ExportNamedDeclaration);
+        }
+    })
+
+    return newExportedData;
+}
+
+
 
 function createIndexFile(data, PATH_TO_DIR) {
     return writeFile(path.join(PATH_TO_DIR, 'index.js'), data, 'utf-8');
+}
+
+function getParentDirAndFileName(PATH_TO_DIR) {
+    let newPath = PATH_TO_DIR.split("/").reverse();
+    let fileName = newPath.shift();
+    parentDir = newPath.reverse().join("/");
+    return {
+        parentDir,
+        fileName
+    }
+}
+
+function createFileInParent(parentDir, fileName, data) {
+    return writeFile(path.join(parentDir, `${fileName}.js`), data, 'utf-8')
 }
 
 module.exports = generateIndexFile;
