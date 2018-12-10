@@ -7,26 +7,55 @@ let options = {
     encoding: "utf-8"
 }
 
-function getFiles(dir) {
-    return readDir(dir, options)
-        .then(files => files.filter(file =>
-            RegExp("(.js|.jsx)$").test(file.name) || file.isDirectory()
-        ))
-        .then(files => files.filter(file => file.name != "index.js"))
-        .catch(error => error.message)
+/**
+ * 
+ * @param {*} dir 
+ * @param {* Object} filterOptions - {
+ *  filters: []
+ * }
+ */
+async function getFiles(dir, filterOptions) {
+    try {
+        let files = await readDir(dir, options);
+
+        //now apply filters.
+        if (!filterOptions) { // only files
+            files = filterByFilesOnly(files);
+        } else {
+            if (filterOptions.include === 'index') { // only index file
+                files = filterByIndex(files);
+            }
+
+            if (filterOptions.include === 'folders') {// return files and folders
+                files = filterByFilesAndFolders(files);
+            }
+        }
+
+
+        return files.map(file => file.name);
+
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
-function getIndexFile(dir) {
-    return readDir(dir, options)
-        .then(files => files.filter(file =>
-            RegExp("^(index.js)$").test(file.name)
-        ))
-        .then(files => files.map(file => file.name))
-        .catch(error => error.message)
+function filterByFilesAndFolders(files) {
+    return files.filter(file =>
+        RegExp("(.js|.jsx)$").test(file.name) || file.isDirectory()
+    )
+}
+
+function filterByFilesOnly(files) {
+    return files.filter(file =>
+        RegExp("(.js|.jsx)$").test(file.name) && file.name != "index.js"
+    )
+}
+
+function filterByIndex(files) {
+    return files.filter(file => file.name == "index.js");
 }
 
 module.exports = {
     getFiles,
-    getIndexFile
 }
 
