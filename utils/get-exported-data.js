@@ -7,7 +7,6 @@ const { parseEs5 } = require('./es5')
 const { parseEs6 } = require('./es6')
 
 async function getExportedData(files, PATH_TO_DIR, VERSION) {
-    console.log(files, PATH_TO_DIR);
     let exportedData = [];
     for (let file in files) {
         let fileName = files[file];

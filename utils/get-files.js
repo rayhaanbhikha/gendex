@@ -46,9 +46,13 @@ function filterByFilesAndFolders(files) {
     )
 }
 
+let exclude = ['__snapshots__']
+
 function filterByFilesOnly(files) {
     return files.filter(file =>
-        (RegExp("(.js|.jsx)$").test(file.name) || file.isDirectory()) && file.name != "index.js"
+        (RegExp("(.js|.jsx)$").test(file.name) || file.isDirectory()) 
+        && file.name != "index.js" && file.name.search(/.test.jsx/) === -1
+        && exclude.indexOf(file.name) === -1
     )
 }
 

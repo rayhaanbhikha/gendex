@@ -1,12 +1,19 @@
 const { transformSync } = require("@babel/core/lib/transform")
+const babelParser = require("@babel/parser")
 const fs = require('fs');
 
 const getExports = (pathToFile) => {
 
     let code = fs.readFileSync(pathToFile, 'utf-8');
-    const { ast } = transformSync(code, { ast: true, code: false });
+    // const { ast } = transformSync(code, { ast: true, code: false });
 
-    let { body } = ast.program
+    // let { body } = ast.program
+
+    const {program} = babelParser.parse(code, {
+            sourceType: 'module',
+            plugins: ['jsx', 'env', 'es6', 'classProperties']
+        })
+    let {body} = program;
 
     let fileExports = {
         ExportDefaultDeclaration: null,
