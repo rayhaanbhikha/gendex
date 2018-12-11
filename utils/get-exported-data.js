@@ -6,13 +6,14 @@ const checkJsVersion = require('./check-version')
 const { parseEs5 } = require('./es5')
 const { parseEs6 } = require('./es6')
 
-async function getExportedData(files, PATH_TO_DIR) {
+async function getExportedData(files, PATH_TO_DIR, VERSION) {
+    console.log(files, PATH_TO_DIR);
     let exportedData = [];
     for (let file in files) {
         let fileName = files[file];
         let pathToFile = path.join(PATH_TO_DIR, fileName);
 
-        let response = await readFromFile(pathToFile);
+        let response = await readFromFile(pathToFile, VERSION);
 
         response.source = `"./${fileName}"`;
 
@@ -22,23 +23,26 @@ async function getExportedData(files, PATH_TO_DIR) {
 }
 
 
-function readFromFile(pathToFile) {
+function readFromFile(pathToFile, VERSION) {
     return readFile(pathToFile, "utf-8")
         .then(fileData => checkJsVersion(fileData))
         .then(version => {
-            if (version == 'es5') {
-                return {
-                    ...parseEs5(pathToFile),
-                    version: 'es5'
+            if(version == VERSION) {
+                if (version == 'es5') {
+                    return {
+                        ...parseEs5(pathToFile),
+                        version: 'es5'
+                    }
+                } else {
+                    return {
+                        ...parseEs6(pathToFile),
+                        version: 'es6'
+                    }
                 }
             } else {
-                return {
-                    ...parseEs6(pathToFile),
-                    version: 'es6'
-                }
+                throw new Error(`file ${pathToFile} has version: ${version}, \nyou requested an 'index.js' file with version: ${VERSION}`)
             }
-        })
-        .catch(error => error.message);
+        });
 }
 
 module.exports = getExportedData;

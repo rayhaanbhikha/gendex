@@ -9,9 +9,10 @@ const generateNodeTree = require('./generate-file-node-tree');
 
 async function createIndexFileInDir(
     PATH_TO_DIR, VERSION, files, additionalExportData = null) {
+    
 
-
-    let exportedData = await getExportedData(files, PATH_TO_DIR);
+    let exportedData = await getExportedData(files, PATH_TO_DIR, VERSION);
+    
     if (additionalExportData) {
         exportedData.push(...additionalExportData);
     }
@@ -36,14 +37,12 @@ async function generateIndexFile(PATH_TO_DIR, VERSION) {
     for (let pathToDirNode in fileNodeTree) {
         let {files, additionalExportData} = fileNodeTree[pathToDirNode];
 
-
         try {
             let data = await createIndexFileInDir(pathToDirNode, VERSION, files, additionalExportData);
             if (pathToDirNode != PATH_TO_DIR) {
                 // 4. take generated exported data and pass to parent directory.
                 let { fileName, parentDir: parentDirNode } = getParentDirAndFileName(pathToDirNode)
                 let newExportedData = mergeExportData(data, fileName, VERSION);
-
                 // 5. Pass newExportData to parent node.  
                 fileNodeTree[parentDirNode].additionalExportData.push(newExportedData);
             }

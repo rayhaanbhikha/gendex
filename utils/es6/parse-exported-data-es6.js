@@ -1,7 +1,8 @@
 function parseExportedData(data) {
     let importStatementsUsed = {}
     let importStatements = [];
-
+    
+    data = data.filter(file => file.version === 'es6');
 
     data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source }) => {
 
