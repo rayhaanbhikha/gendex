@@ -5,7 +5,7 @@ const path = require('path');
 const { parseExportedDataAsEs5 } = require('./es5');
 const { parseExportedDataAsEs6 } = require('./es6');
 const getExportedData = require('./get-exported-data')
-const { getFiles } = require('./get-files')
+const generateNodeTree = require('./generate-file-node-tree');
 
 async function createIndexFileInDir(
     PATH_TO_DIR, VERSION, files, additionalExportData = null) {
@@ -26,65 +26,28 @@ async function createIndexFileInDir(
 }
 
 
-async function generateNodes(dir, fileNodeTree) {
-    let files = await getFiles(dir); // get files + folders in directory.
-
-    // loop through files, recursively calling this function if there is a nested directory.
-    for (let fileIndex in files) {
-        let file = files[fileIndex];
-        if (file.isDirectory()) {
-            await generateNodes(
-                `${dir}/${file.name}`,
-                fileNodeTree,
-            )
-        }
-    }
-
-    fileNodeTree.push({
-        pathToDir: dir,
-        files: files.filter(file => !file.isDirectory()).map(file => file.name),
-    });
-}
-
-function compareDepth(a, b) {
-    let aLength = a.pathToDir.split("/").length;
-    let bLength = b.pathToDir.split("/").length;
-
-    if (aLength < bLength) return 1;
-    return 0
-}
 
 async function generateIndexFile(PATH_TO_DIR, VERSION) {
 
-    let fileNodeTree = []
-    // 1. generate node tree
-    await generateNodes(PATH_TO_DIR, fileNodeTree, 1);
-
-    // 2. sort nodes in reverse order, with most deep level node as the first item in array.
-    fileNodeTree = fileNodeTree.sort(compareDepth);
+    let fileNodeTree = await generateNodeTree(PATH_TO_DIR);
 
 
     // 3. create index at each node.
     let fileNodeTreeLength = fileNodeTree.length;
-    for (let nodeIndex in fileNodeTree) {
-        let { pathToDir, files, additionalExportData } = fileNodeTree[nodeIndex];
-        try {
-            let data = await createIndexFileInDir(pathToDir, VERSION, files, additionalExportData);
+    for (let pathToDirNode in fileNodeTree) {
+        let {files, additionalExportData} = fileNodeTree[pathToDirNode];
 
-            if (nodeIndex != fileNodeTreeLength - 1) {
+
+        try {
+            let data = await createIndexFileInDir(pathToDirNode, VERSION, files, additionalExportData);
+
+            if (pathToDirNode != PATH_TO_DIR) {
                 // 4. take generated exported data and pass to parent directory.
-                let { fileName, parentDir } = getParentDirAndFileName(pathToDir)
+                let { fileName, parentDir: parentDirNode } = getParentDirAndFileName(pathToDirNode)
                 let newExportedData = mergeExportData(data, fileName, VERSION);
-                fileNodeTree = fileNodeTree.map(node => {
-                    if (node.pathToDir === parentDir) {
-                        if (node.additionalExportData && node.additionalExportData.length > 0) {
-                            node.additionalExportData.push(newExportedData);
-                        } else {
-                            node.additionalExportData = [newExportedData]
-                        }
-                    }
-                    return node
-                })
+
+                // 5. Pass newExportData to parent node.  
+                fileNodeTree[parentDirNode].additionalExportData.push(newExportedData);
             }
 
         } catch (error) {

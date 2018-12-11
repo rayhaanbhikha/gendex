@@ -4,6 +4,7 @@ const { parseEs6, parseExportedDataAsEs6 } = require('./es6');
 const { parseEs5, parseExportedDataAsEs5 } = require('./es5');
 const getExportedData = require('./get-exported-data')
 const generateIndexFile = require('./create-index')
+const generateNodeTree = require('./generate-file-node-tree');
 
 module.exports = {
     checkJsVersion,
@@ -14,5 +15,6 @@ module.exports = {
     parseExportedDataAsEs5,
     getExportedData,
     generateIndexFile,
-    getIndexFile
+    getIndexFile,
+    generateNodeTree
 }
