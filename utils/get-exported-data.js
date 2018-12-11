@@ -39,11 +39,14 @@ function readFromFile(pathToFile, VERSION) {
                     }
                 }
             } else {
-                console.log(`file ${pathToFile} has version: ${version}, \nyou requested an 'index.js' file with version: ${VERSION}`)
+                console.log(`Error: '${getFileName(pathToFile)}' has version: ${version}, requested an 'index.js' file with version: ${VERSION}`)
                 return null
-                // throw new Error(`file ${pathToFile} has version: ${version}, \nyou requested an 'index.js' file with version: ${VERSION}`)
             }
         });
 }
-
+function getFileName(PATH_TO_DIR) {
+    let newPath = PATH_TO_DIR.split("/").reverse();
+    let fileName = newPath.shift();
+    return fileName
+}
 module.exports = getExportedData;
