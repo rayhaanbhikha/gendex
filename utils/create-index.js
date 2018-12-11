@@ -21,7 +21,7 @@ async function createIndexFileInDir(
     } else {
         data = parseExportedDataAsEs6(exportedData)
     }
-    await createIndexFile(data, PATH_TO_DIR);
+    if(data.length > 0) await createIndexFile(data, PATH_TO_DIR);
     return exportedData; // this data is what is used in the index.js file - we used this to put in the parent directory.
 }
 
@@ -33,14 +33,12 @@ async function generateIndexFile(PATH_TO_DIR, VERSION) {
 
 
     // 3. create index at each node.
-    let fileNodeTreeLength = fileNodeTree.length;
     for (let pathToDirNode in fileNodeTree) {
         let {files, additionalExportData} = fileNodeTree[pathToDirNode];
 
 
         try {
             let data = await createIndexFileInDir(pathToDirNode, VERSION, files, additionalExportData);
-
             if (pathToDirNode != PATH_TO_DIR) {
                 // 4. take generated exported data and pass to parent directory.
                 let { fileName, parentDir: parentDirNode } = getParentDirAndFileName(pathToDirNode)
@@ -51,7 +49,7 @@ async function generateIndexFile(PATH_TO_DIR, VERSION) {
             }
 
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message)
         }
     }
 }
