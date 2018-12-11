@@ -1,23 +1,26 @@
-const path = require('path');
+#!/usr/bin/env node
+
 const { generateIndexFile } = require('./utils');
+const program = require('commander');
 
-let config = {
-    DEFAULT_VERSION: 'es6',
-    DIRECTORY: 'test-cases',
-    get PATH_TO_DIR() {
-        return path.join(__dirname, this.DIRECTORY)
-    },
-    get VERSION() {
-        return (process.argv[2] && process.argv[2] === 'es5') ? 'es5' : this.DEFAULT_VERSION
-    }
-};
+program
+    .version('0.0.1', '-v, --version')
+    .option('-d, --directory <directory>', 'choose directory')
+    .option('-e, --ecma-script [js-version]', 'choose ECMAScript version', 'es6')
+    .parse(process.argv);
 
-(async () => {
-    try {
-        await generateIndexFile(
-            config.PATH_TO_DIR, config.VERSION)
 
-    } catch (error) {
-        console.log(error);
-    }
-})();
+if (!program.directory) {
+    console.log("Need to specifiy directory")
+    console.log(program.help())
+} else {
+    let { directory: DIRECTORY, ecmaScript: ECMAScript_VERSION } = program;
+
+    (async () => {
+        try {
+            await generateIndexFile(DIRECTORY, ECMAScript_VERSION)
+        } catch (error) {
+            console.log(error);
+        }
+    })();
+}

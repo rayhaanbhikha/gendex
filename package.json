@@ -5,9 +5,10 @@
   "license": "MIT",
   "devDependencies": {},
   "dependencies": {
-    "@babel/core": "^7.2.0",
     "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
     "@babel/parser": "^7.2.0",
-    "@babel/preset-env": "^7.2.0"
+    "@babel/preset-env": "^7.2.0",
+    "commander": "^2.19.0"
   }
 }
