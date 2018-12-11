@@ -1,19 +1,16 @@
-const { transformSync } = require("@babel/core/lib/transform")
 const babelParser = require("@babel/parser")
 const fs = require('fs');
 
 const getExports = (pathToFile) => {
 
     let code = fs.readFileSync(pathToFile, 'utf-8');
-    // const { ast } = transformSync(code, { ast: true, code: false });
 
-    // let { body } = ast.program
+    const { program } = babelParser.parse(code, {
+        sourceType: 'module',
+        plugins: ['jsx', 'env', 'es6', 'classProperties']
+    })
 
-    const {program} = babelParser.parse(code, {
-            sourceType: 'module',
-            plugins: ['jsx', 'env', 'es6', 'classProperties']
-        })
-    let {body} = program;
+    let { body } = program;
 
     let fileExports = {
         ExportDefaultDeclaration: null,
@@ -37,19 +34,28 @@ const getExports = (pathToFile) => {
 
 
 const getNameForExportDefaultDeclartion = node => {
-    return node.declaration.name
+
+    let { declaration } = node;
+    switch (declaration.type) {
+        case 'CallExpression':
+            // FIXME: problem as you could have more arguments
+            return declaration.arguments[0].name;
+        case 'ClassDeclaration': // export default class
+        case 'FunctionDeclaration': // export default function a()
+            return declaration.id.name;
+    }
+    return declaration.name
 }
 
 const getNameForExportNamedDeclaration = node => {
     let { specifiers, declaration } = node
 
-    if (specifiers.length > 0) {
-
+    if (specifiers.length > 0) { // specifies means there are more.
         /**
          * check to see if there exists an 
          * export {}
          */
-        return node.specifiers.map(node => node.exported.name);
+        return specifiers.map(node => node.exported.name);
     } else if (declaration) {
         switch (declaration.type) {
             case 'VariableDeclaration': // export const/let
