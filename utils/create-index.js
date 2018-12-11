@@ -9,20 +9,24 @@ const generateNodeTree = require('./generate-file-node-tree');
 
 async function createIndexFileInDir(
     PATH_TO_DIR, VERSION, files, additionalExportData = null) {
-    
 
     let exportedData = await getExportedData(files, PATH_TO_DIR, VERSION);
-    
+
     if (additionalExportData) {
         exportedData.push(...additionalExportData);
     }
+
+    // if exported data is empty then return early.
+    if (exportedData.length === 0) return exportedData;
+
+
     let data = null;
     if (VERSION === 'es5') {
         data = parseExportedDataAsEs5(exportedData)
     } else {
         data = parseExportedDataAsEs6(exportedData)
     }
-    if(data.length > 0) await createIndexFile(data, PATH_TO_DIR);
+    await createIndexFile(data, PATH_TO_DIR);
     return exportedData; // this data is what is used in the index.js file - we used this to put in the parent directory.
 }
 
@@ -35,11 +39,13 @@ async function generateIndexFile(PATH_TO_DIR, VERSION) {
 
     // 3. create index at each node.
     for (let pathToDirNode in fileNodeTree) {
-        let {files, additionalExportData} = fileNodeTree[pathToDirNode];
+        let { files, additionalExportData } = fileNodeTree[pathToDirNode];
 
         try {
             let data = await createIndexFileInDir(pathToDirNode, VERSION, files, additionalExportData);
-            if (pathToDirNode != PATH_TO_DIR) {
+
+            // if data is empty then just continue to next node as current node does not have an index.js created.
+            if (pathToDirNode != PATH_TO_DIR && data.length > 0) {
                 // 4. take generated exported data and pass to parent directory.
                 let { fileName, parentDir: parentDirNode } = getParentDirAndFileName(pathToDirNode)
                 let newExportedData = mergeExportData(data, fileName, VERSION);

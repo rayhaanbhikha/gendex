@@ -13,7 +13,7 @@ async function getExportedData(files, PATH_TO_DIR, VERSION) {
         let pathToFile = path.join(PATH_TO_DIR, fileName);
 
         let response = await readFromFile(pathToFile, VERSION);
-
+        if (!response) continue;
         response.source = `"./${fileName}"`;
 
         exportedData.push(response);
@@ -26,7 +26,7 @@ function readFromFile(pathToFile, VERSION) {
     return readFile(pathToFile, "utf-8")
         .then(fileData => checkJsVersion(fileData))
         .then(version => {
-            if(version == VERSION) {
+            if (version == VERSION) {
                 if (version == 'es5') {
                     return {
                         ...parseEs5(pathToFile),
@@ -39,7 +39,9 @@ function readFromFile(pathToFile, VERSION) {
                     }
                 }
             } else {
-                throw new Error(`file ${pathToFile} has version: ${version}, \nyou requested an 'index.js' file with version: ${VERSION}`)
+                console.log(`file ${pathToFile} has version: ${version}, \nyou requested an 'index.js' file with version: ${VERSION}`)
+                return null
+                // throw new Error(`file ${pathToFile} has version: ${version}, \nyou requested an 'index.js' file with version: ${VERSION}`)
             }
         });
 }
