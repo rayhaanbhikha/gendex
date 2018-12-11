@@ -1,14 +1,15 @@
+const path = require('path');
 const getExports = (pathToFile) => {
-    let exportsInFile = require(pathToFile);
-    let fileName = pathToFile.split("/").reverse()[0]
 
+    let exportsInFile = require(path.resolve(pathToFile));
+    let fileName = pathToFile.split("/").reverse()[0]
 
     let fileExports = {
         ExportDefaultDeclaration: null,
         ExportNamedDeclaration: []
     }
 
-    switch  (typeof exportsInFile) {
+    switch (typeof exportsInFile) {
         case 'string':
         case 'function':
             fileExports.ExportDefaultDeclaration = sanitizeFileName(fileName);
@@ -22,7 +23,7 @@ const getExports = (pathToFile) => {
     return fileExports
 }
 
-const sanitizeFileName = (fileName="A") => {
+const sanitizeFileName = (fileName = "A") => {
     fileName = fileName.replace(/(.js|.jsx)$/g, '');
     fileName = fileName.split(/[-._]/)
     fileName = fileName.reduce(reducer);
@@ -30,7 +31,7 @@ const sanitizeFileName = (fileName="A") => {
 }
 
 let reducer = (a, b) => {
-    return a+b.substring(0,1).toUpperCase() + b.substring(1)
+    return a + b.substring(0, 1).toUpperCase() + b.substring(1)
 }
 
 module.exports = getExports

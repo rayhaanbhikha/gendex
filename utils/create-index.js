@@ -36,7 +36,6 @@ async function generateIndexFile(PATH_TO_DIR, VERSION) {
 
     let fileNodeTree = await generateNodeTree(PATH_TO_DIR);
 
-
     // 3. create index at each node.
     for (let pathToDirNode in fileNodeTree) {
         let { files, additionalExportData } = fileNodeTree[pathToDirNode];
@@ -85,7 +84,7 @@ function mergeExportData(exportedData, fileName, version) {
 
 
 function createIndexFile(data, PATH_TO_DIR) {
-    return writeFile(path.join(PATH_TO_DIR, 'index.js'), data, 'utf-8');
+    return writeFile(path.resolve(PATH_TO_DIR, 'index.js'), data, 'utf-8');
 }
 
 function getParentDirAndFileName(PATH_TO_DIR) {
