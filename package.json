@@ -1,5 +1,5 @@
 {
-  "name": "clean-up",
+  "name": "@rayhaanbhikha/clean-up",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -10,5 +10,27 @@
     "@babel/parser": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "commander": "^2.19.0"
-  }
+  },
+  "description": "npm module that allows you accumulate all your 'exports' from js files in a directory into a single index.js file.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rayhaanbhikha/cleanup.git"
+  },
+  "keywords": [
+    "cleanup",
+    "javascript",
+    "nodejs",
+    "export",
+    "import",
+    "es5",
+    "es6"
+  ],
+  "author": "Rayhaan Bhikha",
+  "bugs": {
+    "url": "https://github.com/rayhaanbhikha/cleanup/issues"
+  },
+  "homepage": "https://github.com/rayhaanbhikha/cleanup#readme"
 }
