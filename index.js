@@ -11,14 +11,14 @@ program
 
 
 if (!program.directory) {
-    console.log("Need to specifiy directory")
-    console.log(program.help())
+    console.log("\nPlease specifiy a directory.\n");
+    console.log(program.help());
 } else {
     let { directory: DIRECTORY, ecmaScript: ECMAScript_VERSION } = program;
 
     (async () => {
         try {
-            await generateIndexFile(DIRECTORY, ECMAScript_VERSION)
+            await generateIndexFile(DIRECTORY, ECMAScript_VERSION);
         } catch (error) {
             console.log(error);
         }
