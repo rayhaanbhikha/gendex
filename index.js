@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { generateIndexFile } = require('./utils');
+const fs = require('fs');
 const program = require('commander');
 
 program
@@ -10,17 +11,27 @@ program
     .parse(process.argv);
 
 
-if (!program.directory) {
-    console.log("\nPlease specifiy a directory.\n");
-    console.log(program.help());
-} else {
-    let { directory: DIRECTORY, ecmaScript: ECMAScript_VERSION } = program;
+//check input
+let { directory, ecmaScript } = program;
+(async () => {
+    try {
+        // check directory.
+        if (!directory) helperMessage("Please specifiy a directory")
+        fs.statSync(directory).isDirectory(); // throws error if not a directory.
 
-    (async () => {
-        try {
-            await generateIndexFile(DIRECTORY, ECMAScript_VERSION);
-        } catch (error) {
-            console.log(error);
-        }
-    })();
+        // make ecmaScript version => es6 by default if wrong argument is passed.
+        if (ecmaScript !== 'es5' && ecmaScript !== 'es6') ecmaScript = 'es6';
+
+        console.log(ecmaScript, directory);
+
+        await generateIndexFile(directory, ecmaScript);
+    } catch (error) {
+        console.log(error.message);
+    }
+})();
+
+function helperMessage(message) {
+    console.log(`\n${message}\n`);
+    console.log(program.help());
+    process.exit();
 }
