@@ -1,5 +1,5 @@
-const extractCode = require('./extract-code');
+const extractExports = require('./extract-exports');
 
 module.exports = {
-    extractCode
+    extractExports
 }
