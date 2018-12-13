@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
-const { generateIndexFile } = require('./utils');
+const { generateIndexFile, parseEs5, parseEs6, parseExportedData, checkJsVersion, getExportedData, getFiles} = require('./utils');
 const babel = require("@babel/core");
+const babelParser = require("@babel/parser")
+const { promisify } = require('util');
 const fs = require('fs');
+const readFile = promisify(fs.readFile);
 const path = require('path');
 
 const program = require('commander');
@@ -19,16 +22,96 @@ let { directory, ecmaScript } = program;
 (async () => {
     try {
 
-        let code = fs.readFileSync(path.resolve(directory), 'utf-8');
+        // for one file.
+        let pathToDir = path.resolve(__dirname, 'test-cases/test-2');
+        let files = await getFiles(pathToDir);
+        files = files.filter
+        console.log(files);
 
-        const {ast} = babel.transformSync(code, {ast: true, code: false});
 
-        let nodesOfInterest = ast.program.body.filter(node => node.type == 'ExpressionStatement');
-        
+        // console.log(await getExportedData())
+        // let exportedData = []
+
+        // let filePaths = [
+        //     './test-case-es5.js',
+        //     // './test-case-es6.js',
+        //     // "./test-cases/components/Section/Section.jsx",
+        //     // './test-cases/components/Chart/Chart.jsx',
+        //     // './test-cases/containers/FormPage/FormPage.jsx',
+        //     // 'test-cases/containers/TeamPage/TeamPage.jsx'
+        // ];
+
+        // for(let filePathIndex in filePaths) {
+        //     let filePath = filePaths[filePathIndex];
+
+
+        // }
+
+
+
+
+        // console.log(exportedData);
+        // console.log(parseExportedData(exportedData, ecmaScript));
+
+        // let code = fs.readFileSync(path.resolve(directory), 'utf-8');
+
+        // const { program } = babelParser.parse(code);
+
+
+        // let nodesOfInterest = program.body.filter(node =>
+        //     node.type == 'ExpressionStatement'
+        //     && node.expression.type === 'AssignmentExpression'
+        // );
+
+        // let ExportNamedDeclaration = []
+        // let ExportDefaultDeclaration = [];
+
+
+
+        // for(let nodeIndex in nodesOfInterest) {
+        //     let node = nodesOfInterest[nodeIndex];
+
+        //     let {object, property} = node.expression.left
+        //     let key = object.name
+        //     let keyName = property.name
+
+
+        //     if(key === 'exports') {
+        //         ExportNamedDeclaration.push(keyName);
+        //     } else if(key === 'module') {
+        //         ExportDefaultDeclaration.push('')
+        //     }
+
+        //     console.log(key, ".", keyName);
+        //     // console.log(object, property);
+
+
+        // }
+
+        // console.log(ExportNamedDeclaration)
+
+
+
         // console.log(nodesOfInterest);
-        nodesOfInterest.forEach(node => {
-            console.log(node.expression);
-        })
+        // nodesOfInterest.forEach(node => {
+        //     console.log(node.expression);
+        // })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
