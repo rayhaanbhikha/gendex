@@ -1,12 +1,12 @@
 function parseExportedData(data, version) {
     let importStatementsUsed = {}
     let importStatements = [];
-    
-    data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source, version: fileVersion}) => {
-        
-        if(version === 'es5' && fileVersion === 'es6') {
+
+    data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source, version: fileVersion }) => {
+
+        if (version === 'es5' && fileVersion === 'es6') {
             throw new Error(`Cannot create ${version} index.js, as ${source} is ${fileVersion}`);
-        } 
+        }
 
         // if there is an export default and export.
         if (ExportDefaultDeclaration && ExportNamedDeclaration.length > 0) {
@@ -49,12 +49,12 @@ function parseExportedData(data, version) {
             importStatements.push(importStatement);
         }
     })
-    if(importStatements.length === 0) {return null}
+    if (importStatements.length === 0) { return null }
     return buildResponse(importStatements, importStatementsUsed, version)
 }
 
-const buildImportStatement = (name, source, version) =>  {
-    return (version == 'es5') ? 
+const buildImportStatement = (name, source, version) => {
+    return (version == 'es5') ?
         `const ${name} = require(${source})`
         :
         `import ${name} from ${source}`;
@@ -62,7 +62,7 @@ const buildImportStatement = (name, source, version) =>  {
 
 const buildExportStatement = (exportStatements, version) => {
     let response = null;
-    if(version == 'es5') {
+    if (version == 'es5') {
         response = "module.exports = {\n"
     } else if (version == 'es6') {
         response = "export {\n"

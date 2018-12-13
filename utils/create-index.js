@@ -18,10 +18,9 @@ async function createIndexFileInDir(
     // if exported data is empty then return early.
     if (exportedData.length === 0) return exportedData;
 
-    let data = parseExportedData(exportedData); // will return null if it is empty.
+    let data = parseExportedData(exportedData, VERSION); // will return null if it is empty.
 
-    if(data)
-    await createIndexFile(data, PATH_TO_DIR);
+    if (data) await createIndexFile(data, PATH_TO_DIR);
     return exportedData; // this data is what is used in the index.js file - we used this to put in the parent directory.
 }
 
