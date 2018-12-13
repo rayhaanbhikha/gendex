@@ -140,7 +140,7 @@ const buildImportStatementEs6 = (defaultImport, namedImports, source) => {
             if (alias !== name) {
                 importString += ` ${name} as ${alias}`
             } else {
-                importString += ` ${name}`
+                importString += ` ${name} `
             }
             if (index !== namedImportsLength - 1) importString += ',';
         })

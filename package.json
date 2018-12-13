@@ -1,5 +1,5 @@
 {
-  "name": "@rayhaanbhikha/clean-up",
+  "name": "@rayhaanbhikha/gen-i",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -14,6 +14,9 @@
   "description": "npm module that allows you accumulate all your 'exports' from js files in a directory into a single index.js file.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "gen-i": "./cli.js"
   },
   "repository": {
     "type": "git",
