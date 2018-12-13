@@ -1,4 +1,4 @@
-const { extractExports } = require('../shared-services')
+const { extractExports, getFileName } = require('../shared-services')
 
 
 const getExports = (fileCode, fileName, version) => {
@@ -44,7 +44,7 @@ const getExports = (fileCode, fileName, version) => {
                 break;
             }
 
-            ExportDefaultDeclaration = sanitizeFileName(fileName);
+            ExportDefaultDeclaration = getFileName(fileName);
             break;
         }
     }
@@ -55,17 +55,6 @@ const getExports = (fileCode, fileName, version) => {
         source: `"./${fileName}"`,
         version
     }
-}
-
-const sanitizeFileName = (fileName = "A") => {
-    fileName = fileName.replace(/(.js|.jsx)$/g, '');
-    fileName = fileName.split(/[-._]/)
-    fileName = fileName.reduce(reducer);
-    return fileName
-}
-
-let reducer = (a, b) => {
-    return a + b.substring(0, 1).toUpperCase() + b.substring(1)
 }
 
 module.exports = getExports
