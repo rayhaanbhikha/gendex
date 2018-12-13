@@ -1,14 +1,11 @@
-const { extractCode } = require('../shared-services')
+const { extractExports } = require('../shared-services')
 
 
-const getExports = (pathToFile) => {
+const getExports = (fileCode, fileName, version) => {
 
-    let fileName = pathToFile.split("/").reverse()[0]
 
     let ExportDefaultDeclaration = null,
         ExportNamedDeclaration = [];
-
-
 
     /**
      * 
@@ -17,7 +14,7 @@ const getExports = (pathToFile) => {
      * 
      */
 
-    let code = extractCode(pathToFile);
+    let code = extractExports(fileCode);
 
     let nodesOfInterest = code.filter(node =>
         node.type == 'ExpressionStatement'
@@ -54,7 +51,9 @@ const getExports = (pathToFile) => {
 
     return {
         ExportDefaultDeclaration,
-        ExportNamedDeclaration
+        ExportNamedDeclaration,
+        source: `"./${fileName}"`,
+        version
     }
 }
 

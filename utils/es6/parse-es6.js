@@ -1,6 +1,6 @@
-const {extractCode} = require('../shared-services')
+const {extractExports} = require('../shared-services')
 
-const getExports = (pathToFile) => {
+const getExports = (fileCode, fileName, version) => {
 
     /**
      * 
@@ -9,11 +9,13 @@ const getExports = (pathToFile) => {
      * 
      */
 
-    let code = extractCode(pathToFile);
+    let code = extractExports(fileCode);
 
     let fileExports = {
         ExportDefaultDeclaration: null,
-        ExportNamedDeclaration: []
+        ExportNamedDeclaration: [],
+        source: `"./${fileName}"`,
+        version
     }
 
     code.filter(node => {
