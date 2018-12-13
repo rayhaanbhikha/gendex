@@ -21,7 +21,7 @@ const getExports = (fileCode, fileName, version) => {
     code.filter(node => {
         switch (node.type) {
             case 'ExportDefaultDeclaration':
-                fileExports[node.type] = getNameForExportDefaultDeclartion(node);
+                fileExports[node.type] = sanitizeFileName(fileName);
                 break;
             case 'ExportNamedDeclaration':
                 fileExports[node.type].push(...getNameForExportNamedDeclaration(node));
@@ -30,22 +30,6 @@ const getExports = (fileCode, fileName, version) => {
     })
 
     return fileExports;
-}
-
-
-
-const getNameForExportDefaultDeclartion = node => {
-
-    let { declaration } = node;
-    switch (declaration.type) {
-        case 'CallExpression':
-            // FIXME: problem as you could have more arguments
-            return declaration.arguments[0].name;
-        case 'ClassDeclaration': // export default class
-        case 'FunctionDeclaration': // export default function a()
-            return declaration.id.name;
-    }
-    return declaration.name
 }
 
 const getNameForExportNamedDeclaration = node => {
@@ -69,6 +53,17 @@ const getNameForExportNamedDeclaration = node => {
         return []
     }
 
+}
+
+const sanitizeFileName = (fileName = "A") => {
+    fileName = fileName.replace(/(.js|.jsx)$/g, '');
+    fileName = fileName.split(/[-._]/)
+    fileName = fileName.reduce(reducer);
+    return fileName
+}
+
+let reducer = (a, b) => {
+    return a + b.substring(0, 1).toUpperCase() + b.substring(1)
 }
 
 
