@@ -6,8 +6,7 @@ const parseExportedData = require('./parse-exported-data');
 const getExportedData = require('./get-exported-data')
 const generateNodeTree = require('./generate-file-node-tree');
 
-async function createIndexFileInDir(
-    PATH_TO_DIR, VERSION, files, additionalExportData = null) {
+async function createIndexFileInDir(PATH_TO_DIR, VERSION, files, additionalExportData = null) {
 
     let exportedData = await getExportedData(files, PATH_TO_DIR, VERSION);
 
