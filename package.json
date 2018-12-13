@@ -1,7 +1,7 @@
 {
-  "name": "@rayhaanbhikha/gen-i",
+  "name": "gendex",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "cli.js",
   "license": "MIT",
   "devDependencies": {},
   "dependencies": {
@@ -16,14 +16,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "gen-i": "./cli.js"
+    "gendex": "./cli.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rayhaanbhikha/cleanup.git"
+    "url": "git+https://github.com/rayhaanbhikha/gendex.git"
   },
   "keywords": [
     "cleanup",
+    "gendex",
     "javascript",
     "nodejs",
     "export",
@@ -33,7 +34,7 @@
   ],
   "author": "Rayhaan Bhikha",
   "bugs": {
-    "url": "https://github.com/rayhaanbhikha/cleanup/issues"
+    "url": "https://github.com/rayhaanbhikha/gendex/issues"
   },
-  "homepage": "https://github.com/rayhaanbhikha/cleanup#readme"
+  "homepage": "https://github.com/rayhaanbhikha/gendex#readme"
 }
