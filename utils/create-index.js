@@ -2,8 +2,7 @@ const fs = require('fs');
 const { promisify } = require('util');
 const writeFile = promisify(fs.writeFile);
 const path = require('path');
-const { parseExportedDataAsEs5 } = require('./es5');
-const { parseExportedDataAsEs6 } = require('./es6');
+const parseExportedData = require('./parse-exported-data');
 const getExportedData = require('./get-exported-data')
 const generateNodeTree = require('./generate-file-node-tree');
 
@@ -19,13 +18,9 @@ async function createIndexFileInDir(
     // if exported data is empty then return early.
     if (exportedData.length === 0) return exportedData;
 
+    let data = parseExportedData(exportedData); // will return null if it is empty.
 
-    let data = null;
-    if (VERSION === 'es5') {
-        data = parseExportedDataAsEs5(exportedData)
-    } else {
-        data = parseExportedDataAsEs6(exportedData)
-    }
+    if(data)
     await createIndexFile(data, PATH_TO_DIR);
     return exportedData; // this data is what is used in the index.js file - we used this to put in the parent directory.
 }
