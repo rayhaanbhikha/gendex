@@ -1,24 +1,15 @@
-const babelParser = require("@babel/parser")
-const fs = require('fs');
-const path = require('path');
+const {extractCode} = require('../shared-services')
 
 const getExports = (pathToFile) => {
 
-    let code = fs.readFileSync(path.resolve(pathToFile), 'utf-8');
-
-    const { program } = babelParser.parse(code, {
-        sourceType: 'module',
-        plugins: ['jsx', 'env', 'es6', 'classProperties']
-    })
-
-    let { body } = program;
+    let code = extractCode(pathToFile);
 
     let fileExports = {
         ExportDefaultDeclaration: null,
         ExportNamedDeclaration: []
     }
 
-    body.filter(node => {
+    code.filter(node => {
         switch (node.type) {
             case 'ExportDefaultDeclaration':
                 fileExports[node.type] = getNameForExportDefaultDeclartion(node);

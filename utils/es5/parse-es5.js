@@ -1,26 +1,56 @@
-const path = require('path');
+const {extractCode} = require('../shared-services')
+
+
 const getExports = (pathToFile) => {
 
-    let exportsInFile = require(path.resolve(pathToFile));
     let fileName = pathToFile.split("/").reverse()[0]
 
-    let fileExports = {
-        ExportDefaultDeclaration: null,
-        ExportNamedDeclaration: []
+    let ExportDefaultDeclaration = null,
+        ExportNamedDeclaration = [];
+
+    let code = extractCode(pathToFile);
+
+    let nodesOfInterest = code.filter(node =>
+        node.type == 'ExpressionStatement'
+        && node.expression.type === 'AssignmentExpression'
+    );
+
+    for (let nodeIndex in nodesOfInterest) {
+        let node = nodesOfInterest[nodeIndex];
+
+        let { object, property } = node.expression.left
+        let key = object.name
+        let keyName = property.name
+
+
+        if (key === 'exports') {
+            ExportNamedDeclaration.push(keyName);
+        } else if (key === 'module') {
+            ExportNamedDeclaration = [] // any named exports get rid of them as module overrides them.
+        
+    
+            // check if module.exports is an object
+            let valueObject = node.expression.right;
+            if(valueObject.type === 'ObjectExpression' && valueObject.properties.length > 0) { // is an object which is not empty.
+                valueObject.properties.forEach(node => {
+                    ExportNamedDeclaration.push(node.key.name);
+                })
+                break;
+            }
+
+            ExportDefaultDeclaration = sanitizeFileName(fileName);
+            break;
+        }
+
+        console.log(key, ".", keyName);
+
+        // console.log(object, property);
     }
 
-    switch (typeof exportsInFile) {
-        case 'string':
-        case 'function':
-            fileExports.ExportDefaultDeclaration = sanitizeFileName(fileName);
-            break;
-        case 'object':
-            for (let exportName in exportsInFile) {
-                fileExports.ExportNamedDeclaration.push(exportName)
-            }
-            break;
+    return {
+        ExportDefaultDeclaration,
+        ExportNamedDeclaration
     }
-    return fileExports
 }
 
 const sanitizeFileName = (fileName = "A") => {
