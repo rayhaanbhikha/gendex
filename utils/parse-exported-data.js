@@ -1,11 +1,14 @@
-function parseExportedData(data) {
+function parseExportedData(data, version) {
     let importStatementsUsed = {}
     let importStatements = [];
     
-    data = data.filter(file => file.version === 'es6');
+    data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source, version: fileVersion}) => {
+        
+        if(version === 'es5' && fileVersion === 'es6') {
+            throw new Error(`Cannot create ${version} index.js, as ${source} is ${fileVersion}`);
+        } 
 
-    data.forEach(({ ExportDefaultDeclaration, ExportNamedDeclaration, source }) => {
-
+        // if there is an export default and export.
         if (ExportDefaultDeclaration && ExportNamedDeclaration.length > 0) {
 
 
@@ -22,43 +25,57 @@ function parseExportedData(data) {
 
                 importStatement = buildImportStatement(
                     `{${importByNames}}`,
-                    source
+                    source,
+                    version
                 )
             } else {
                 importStatement = buildImportStatement(
-                    `${importDisplayName}, {${checkImportArray(ExportNamedDeclaration, importStatementsUsed).join(', ')} }`,
-                    source
+                    `${importDisplayName}, { ${checkImportArray(ExportNamedDeclaration, importStatementsUsed).join(', ')} }`,
+                    source,
+                    version
                 )
             }
 
             importStatements.push(importStatement)
         } else if (ExportDefaultDeclaration) {
-            let importStatement = buildImportStatement(checkImport(ExportDefaultDeclaration, importStatementsUsed), source);
+            let importStatement = buildImportStatement(checkImport(ExportDefaultDeclaration, importStatementsUsed), source, version);
             importStatements.push(importStatement)
         } else if (ExportNamedDeclaration.length > 0) {
             let importStatement = buildImportStatement(
                 `{ ${checkImportArray(ExportNamedDeclaration, importStatementsUsed).join(', ')} }`,
-                source
+                source,
+                version
             )
             importStatements.push(importStatement);
         }
     })
-    return buildResponse(importStatements, importStatementsUsed)
+    if(importStatements.length === 0) {return null}
+    return buildResponse(importStatements, importStatementsUsed, version)
 }
 
-const buildImportStatement = (name, source) => `import ${name} from ${source}`
+const buildImportStatement = (name, source, version) =>  {
+    return (version == 'es5') ? 
+        `const ${name} = require(${source})`
+        :
+        `import ${name} from ${source}`;
+}
 
-const buildExportStatement = (exportStatements) => {
-    let response = "export {\n"
+const buildExportStatement = (exportStatements, version) => {
+    let response = null;
+    if(version == 'es5') {
+        response = "module.exports = {\n"
+    } else if (version == 'es6') {
+        response = "export {\n"
+    }
     Object.keys(exportStatements).forEach(exportItem => response += `\t${exportItem},\n`);
     response += "}"
     return response;
 }
 
-const buildResponse = (importStatements, importStatementsUsed) => {
+const buildResponse = (importStatements, importStatementsUsed, version) => {
     let response = importStatements.join("\n");
     response += "\n\n\n"
-    response += buildExportStatement(importStatementsUsed);
+    response += buildExportStatement(importStatementsUsed, version);
     return response;
 }
 
