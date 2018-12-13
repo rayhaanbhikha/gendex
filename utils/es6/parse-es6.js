@@ -2,6 +2,13 @@ const {extractCode} = require('../shared-services')
 
 const getExports = (pathToFile) => {
 
+    /**
+     * 
+     * extracting code in es6 return an array of nodes 
+     *  where the export types are either 'ExportNamedDeclaration or Export default Declaration"
+     * 
+     */
+
     let code = extractCode(pathToFile);
 
     let fileExports = {

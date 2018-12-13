@@ -1,4 +1,4 @@
-const {extractCode} = require('../shared-services')
+const { extractCode } = require('../shared-services')
 
 
 const getExports = (pathToFile) => {
@@ -7,6 +7,15 @@ const getExports = (pathToFile) => {
 
     let ExportDefaultDeclaration = null,
         ExportNamedDeclaration = [];
+
+
+
+    /**
+     * 
+     * extracting code in es5 return an array of nodes 
+     *  where the export types are 'expression statements'
+     * 
+     */
 
     let code = extractCode(pathToFile);
 
@@ -27,11 +36,11 @@ const getExports = (pathToFile) => {
             ExportNamedDeclaration.push(keyName);
         } else if (key === 'module') {
             ExportNamedDeclaration = [] // any named exports get rid of them as module overrides them.
-        
-    
+
+
             // check if module.exports is an object
             let valueObject = node.expression.right;
-            if(valueObject.type === 'ObjectExpression' && valueObject.properties.length > 0) { // is an object which is not empty.
+            if (valueObject.type === 'ObjectExpression' && valueObject.properties.length > 0) { // is an object which is not empty.
                 valueObject.properties.forEach(node => {
                     ExportNamedDeclaration.push(node.key.name);
                 })
@@ -41,10 +50,6 @@ const getExports = (pathToFile) => {
             ExportDefaultDeclaration = sanitizeFileName(fileName);
             break;
         }
-
-        console.log(key, ".", keyName);
-
-        // console.log(object, property);
     }
 
     return {

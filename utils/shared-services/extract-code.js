@@ -11,7 +11,6 @@ function extractCode(pathToFile) {
         plugins: ['jsx', 'env', 'es6', 'classProperties']
     })
 
-    console.log(program.body);
     return program.body;
 }
 
