@@ -67,7 +67,7 @@ NOTE: `-d, --directory` option is required.
 Usage
 ===
 
-In the `examples` directory we have two nested directories `es5` and `es6`. If you look through the JavaScript files you can see they export variables, functions, classes etc.
+In the [`examples`](https://github.com/rayhaanbhikha/gendex/tree/master/examples "examples") directory we have two nested directories `es5` and `es6`. If you look through the JavaScript files you can see they export variables, functions, classes etc.
 
 I will provide two examples, one will use **ES5** and the other will use **ES6**.
 
