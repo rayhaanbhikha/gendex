@@ -7,7 +7,7 @@ gendex is a cli tool that allows developers to organise `exports` from several J
 
 gendex works with jsx files and by default uses **ES6** when generating the index.js file. But can be configured to use **ES5** (Explained in Usage section).
 
-gendex can be used in nested directories as well. And will recursively build an index.js file at each level.
+gendex can be used in nested directories and will recursively build an index.js file at each level.
 
 Installation
 ===
