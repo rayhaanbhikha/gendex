@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { generateIndexFile } = require('./utils');
+const { generateIndexFile } = require('./src');
 const fs = require('fs');
 const program = require('commander');
 
