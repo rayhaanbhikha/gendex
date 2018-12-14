@@ -3,11 +3,11 @@ gendex
 
 ```gendex requires node v10.10.0```
 
-gendex is a cli tool that allows developers to organise `exports` from several JavaScript files in a given directory, into one 'master' index.js file.
+gendex is a cli tool that allows developers to organise `exports` from several JavaScript files in a given directory, into one 'master' `index.js` file.
 
-gendex works with jsx files and by default uses **ES6** when generating the index.js file. But can be configured to use **ES5** (Explained in Usage section).
+gendex works with jsx files as well and by default uses **ES6** when generating the `index.js` file. But can be configured to use **ES5** (Explained in Usage section).
 
-gendex can be used in nested directories and will recursively build an index.js file at each level.
+gendex can be used in nested directories and will recursively build an `index.js` file at each level.
 
 Installation
 ===
@@ -117,4 +117,4 @@ module.exports = {
 }
 ```
 
-**__Please note__**: Attempting to generate an (ES5) index.js from JS files which are in (ES6) will result in an error.
+**__Please note__**: Attempting to generate an **ES5** `index.js` from **ES6** JS files will result in an error.
