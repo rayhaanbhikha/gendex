@@ -53,6 +53,7 @@ jobs:
           name: "Deploy to npm"
           command: |
             echo "I AM DEPLOYING"
+            npm version patch
 
       # - run:
       #     name: Authenticate with registry
