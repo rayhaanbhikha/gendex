@@ -1,6 +1,6 @@
-import createIndex  from "./create-index.js";
+const createIndex = require("./create-index.js");
 
 
-export {
+module.exports = {
 	createIndex,
 }

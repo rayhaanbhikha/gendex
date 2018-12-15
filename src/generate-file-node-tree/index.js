@@ -1,6 +1,6 @@
-import generateFileNodeTree  from "./generate-file-node-tree.js";
+const generateFileNodeTree = require("./generate-file-node-tree.js");
 
 
-export {
+module.exports = {
 	generateFileNodeTree,
 }

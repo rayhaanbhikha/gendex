@@ -1,15 +1,15 @@
-import { checkVersion } from "./check-version";
-import { createIndex } from "./create-index";
-import { extractExports , getFileName } from "./shared-services";
-import { generateFileNodeTree } from "./generate-file-node-tree";
-import { getExportedData } from "./get-exported-data";
-import { getFiles } from "./get-files";
-import { parseEs5 } from "./es5";
-import { parseEs6 } from "./es6";
-import { parseExportedData } from "./parse-exported-data";
+const { checkVersion} = require("./check-version");
+const { createIndex} = require("./create-index");
+const { extractExports, getFileName} = require("./shared-services");
+const { generateFileNodeTree} = require("./generate-file-node-tree");
+const { getExportedData} = require("./get-exported-data");
+const { getFiles} = require("./get-files");
+const { parseEs5} = require("./es5");
+const { parseEs6} = require("./es6");
+const { parseExportedData} = require("./parse-exported-data");
 
 
-export {
+module.exports = {
 	checkVersion,
 	createIndex,
 	extractExports,

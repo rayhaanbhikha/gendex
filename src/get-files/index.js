@@ -1,6 +1,6 @@
-import { getFiles } from "./get-files.js";
+const { getFiles} = require("./get-files.js");
 
 
-export {
+module.exports = {
 	getFiles,
 }

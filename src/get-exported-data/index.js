@@ -1,6 +1,6 @@
-import getExportedData  from "./get-exported-data.js";
+const getExportedData = require("./get-exported-data.js");
 
 
-export {
+module.exports = {
 	getExportedData,
 }

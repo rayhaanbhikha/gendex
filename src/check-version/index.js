@@ -1,6 +1,6 @@
-import checkVersion  from "./check-version.js";
+const checkVersion = require("./check-version.js");
 
 
-export {
+module.exports = {
 	checkVersion,
 }

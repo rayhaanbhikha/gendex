@@ -1,8 +1,8 @@
-import extractExports  from "./extract-exports.js";
-import getFileName  from "./get-file-name.js";
+const extractExports = require("./extract-exports.js");
+const getFileName = require("./get-file-name.js");
 
 
-export {
+module.exports = {
 	extractExports,
 	getFileName,
 }

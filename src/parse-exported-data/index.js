@@ -1,6 +1,6 @@
-import parseExportedData  from "./parse-exported-data.js";
+const parseExportedData = require("./parse-exported-data.js");
 
 
-export {
+module.exports = {
 	parseExportedData,
 }
