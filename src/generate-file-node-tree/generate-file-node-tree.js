@@ -1,4 +1,4 @@
-const { getFiles } = require('./get-files')
+const { getFiles } = require('../get-files/get-files')
 
 async function generateNodes(dir, fileNodeTree) {
     let files = await getFiles(dir); // get files + folders in directory.
@@ -40,7 +40,7 @@ module.exports = async (PATH_TO_DIR) => {
     // 3. change structure of filenodetree so we have keys which are paths and values which are files.
     let keyValueNodeStructure = {};
 
-    fileNodeTree.forEach(({files, pathToDir}) => keyValueNodeStructure[pathToDir] = { files, additionalExportData: []});
+    fileNodeTree.forEach(({ files, pathToDir }) => keyValueNodeStructure[pathToDir] = { files, additionalExportData: [] });
 
     return keyValueNodeStructure;
 }

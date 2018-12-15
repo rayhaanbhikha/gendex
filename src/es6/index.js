@@ -1,5 +1,6 @@
-const parseEs6 = require('./parse-es6');
+import parseEs6  from "./parse-es6.js";
 
-module.exports = {
-    parseEs6
+
+export {
+	parseEs6,
 }
