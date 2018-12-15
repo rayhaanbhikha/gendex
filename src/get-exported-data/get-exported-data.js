@@ -12,7 +12,8 @@ async function getExportedData(files, PATH_TO_DIR, VERSION) {
         let fileName = files[file];
         let exportedDataFromFile = await readFromFile(PATH_TO_DIR, fileName);
         if (!exportedDataFromFile) continue;
-        exportedData.push();
+
+        exportedData.push(exportedDataFromFile);
     }
     return exportedData
 }
