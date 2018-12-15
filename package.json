@@ -1,6 +1,6 @@
 {
   "name": "gendex",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "cli.js",
   "license": "LGPL-3.0",
   "devDependencies": {
