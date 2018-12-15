@@ -15,7 +15,7 @@
   },
   "description": "npm module that allows you accumulate all your 'exports' from js files in a directory into a single index.js file.",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -- src/**/*.js"
   },
   "bin": {
     "gendex": "./cli.js"
