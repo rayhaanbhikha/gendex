@@ -15,12 +15,6 @@ jobs:
     steps:
       - checkout
 
-      - run: 
-          name: check directory
-          command: |
-            ls -la
-            echo $CIRCLE_TAG
-
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
@@ -50,17 +44,11 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run:
-          name: "Deploy to npm"
-          command: |
-            echo "I AM DEPLOYING"
-            npm version patch
-
-      # - run:
-      #     name: Authenticate with registry
-      #     command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
-      # - run:
-      #     name: Publish package
-      #     command: npm publish
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
 
             
 workflows:
