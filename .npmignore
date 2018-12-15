@@ -1,7 +1,8 @@
+.circleci
 .vscode
-.gitignore
-test-cases
-README.md
 examples
+test-cases
+.gitignore
 LICENSE.md
+README.md
 src/**/*.test.js
