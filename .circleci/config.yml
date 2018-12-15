@@ -65,3 +65,4 @@ workflows:
       - test:
           requires:
             - build
+      - deploy
