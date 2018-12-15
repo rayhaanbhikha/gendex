@@ -3,7 +3,10 @@
   "version": "1.0.6",
   "main": "cli.js",
   "license": "LGPL-3.0",
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  },
   "dependencies": {
     "@babel/core": "^7.2.0",
     "@babel/parser": "^7.2.0",
@@ -12,7 +15,7 @@
   },
   "description": "npm module that allows you accumulate all your 'exports' from js files in a directory into a single index.js file.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "bin": {
     "gendex": "./cli.js"
