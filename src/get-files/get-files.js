@@ -50,7 +50,7 @@ let exclude = ['__snapshots__']
 
 function filterByFilesOnly(files) {
     return files.filter(file =>
-        (RegExp("(.js|.jsx)$").test(file.name) || file.isDirectory()) 
+        (RegExp("(.js|.jsx)$").test(file.name) || file.isDirectory())
         && file.name != "index.js" && file.name.search(/.test.jsx/) === -1
         && exclude.indexOf(file.name) === -1
     )
@@ -60,7 +60,5 @@ function filterByIndex(files) {
     return files.filter(file => file.name == "index.js");
 }
 
-module.exports = {
-    getFiles,
-}
+module.exports = getFiles
 

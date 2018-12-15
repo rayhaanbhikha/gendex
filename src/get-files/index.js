@@ -1,4 +1,4 @@
-const { getFiles} = require("./get-files.js");
+const getFiles = require("./get-files.js");
 
 
 module.exports = {

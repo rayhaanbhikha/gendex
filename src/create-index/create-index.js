@@ -2,9 +2,9 @@ const fs = require('fs');
 const { promisify } = require('util');
 const writeFile = promisify(fs.writeFile);
 const path = require('path');
-const parseExportedData = require('../parse-exported-data/parse-exported-data');
-const getExportedData = require('./get-exported-data')
-const generateNodeTree = require('../generate-file-node-tree/generate-file-node-tree');
+const parseExportedData = require('../parse-exported-data');
+const getExportedData = require('../get-exported-data')
+const generateNodeTree = require('../generate-file-node-tree');
 
 async function createIndexFileInDir(PATH_TO_DIR, VERSION, files, additionalExportData = null) {
 
