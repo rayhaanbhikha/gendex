@@ -9,29 +9,18 @@ let options = {
 
 /**
  * 
- * @param {*} dir 
- * @param {* Object} filterOptions - {
- *  filters: []
- * }
+ * @param {string} dir - path to directory
+ * @param {object} [filterOptions] - filterOptions
+ * @param {boolean} filterOptions.excludeFolders - exclude folders
  */
-async function getFiles(dir, filterOptions) {
+
+async function getFiles(dir, filterOptions = {}) {
     try {
         let files = await readDir(dir, options);
 
-        //now apply filters.
-        if (!filterOptions) { // only files
-            files = filterByFilesOnly(files);
-        } else {
-            if (filterOptions.include === 'index') { // only index file
-                files = filterByIndex(files);
-            }
+        files = filterByFilesAndFolders(files);
 
-            if (filterOptions.include === 'folders') {// return files and folders
-                files = filterByFilesAndFolders(files);
-            }
-        }
-
-        // return files.map(file => file.name);
+        if (filterOptions.excludeFolders) files = filterByFilesOnly(files);
 
         return files;
 
@@ -40,24 +29,22 @@ async function getFiles(dir, filterOptions) {
     }
 }
 
+let generalFileExclusions = ['index.js', 'index.jsx']
+let regExExclusions = RegExp(/test/);
+
 function filterByFilesAndFolders(files) {
     return files.filter(file =>
-        RegExp("(.js|.jsx)$").test(file.name) || file.isDirectory()
+        (
+            RegExp("(.js|.jsx)$").test(file.name)
+            || file.isDirectory()
+        )
+        && generalFileExclusions.indexOf(file.name) === -1 // exclude files listed in 'general exclusions'
+        && regExExclusions.test(file.name) === false // exclude test files
     )
 }
-
-let exclude = ['__snapshots__']
 
 function filterByFilesOnly(files) {
-    return files.filter(file =>
-        (RegExp("(.js|.jsx)$").test(file.name) || file.isDirectory())
-        && file.name != "index.js" && file.name.search(/.test.jsx/) === -1
-        && exclude.indexOf(file.name) === -1
-    )
-}
-
-function filterByIndex(files) {
-    return files.filter(file => file.name == "index.js");
+    return files.filter(file => !file.isDirectory())
 }
 
 module.exports = getFiles

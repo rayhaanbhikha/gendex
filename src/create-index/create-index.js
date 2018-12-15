@@ -90,4 +90,4 @@ function getParentDirAndFileName(PATH_TO_DIR) {
     }
 }
 
-module.exports = generateIndexFile;
+module.exports = { generateIndexFile };

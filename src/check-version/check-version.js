@@ -1,4 +1,4 @@
-const checkJsVerson = fileCode => {
+const checkJsVerson = (fileCode, fileName) => {
     let resEs5Expression = /(module.exports|exports\.\w+)(\ *|\t*)=/
     let resEs6Expression = /export\ /
     let regEs5 = RegExp(resEs5Expression, 'gm')
@@ -9,8 +9,9 @@ const checkJsVerson = fileCode => {
     } else if (regEs6.test(fileCode)) {
         return 'es6';
     } else {
-        console.log(fileCode);
-        throw new Error('file does not export');
+        console.log(`file ${fileName} has no exports`);
+        console.log(`skipping....`);
+        return null;
     }
 }
 

@@ -1,6 +1,6 @@
-const createIndex = require("./create-index.js");
+const { generateIndexFile} = require("./create-index.js");
 
 
 module.exports = {
-	createIndex,
+	generateIndexFile,
 }

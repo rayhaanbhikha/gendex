@@ -10,7 +10,9 @@ async function getExportedData(files, PATH_TO_DIR, VERSION) {
     let exportedData = [];
     for (let file in files) {
         let fileName = files[file];
-        exportedData.push(await readFromFile(PATH_TO_DIR, fileName));
+        let exportedDataFromFile = await readFromFile(PATH_TO_DIR, fileName);
+        if (!exportedDataFromFile) continue;
+        exportedData.push();
     }
     return exportedData
 }
@@ -18,7 +20,8 @@ async function getExportedData(files, PATH_TO_DIR, VERSION) {
 
 async function readFromFile(directory, fileName) {
     let fileCode = await readFile(path.join(directory, fileName), "utf-8");
-    let version = checkJsVersion(fileCode);
+    let version = checkJsVersion(fileCode, fileName);
+    if (!version) return null;
 
     if (version == 'es5') {
         return parseEs5(fileCode, fileName, version);

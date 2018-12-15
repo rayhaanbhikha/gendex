@@ -1,4 +1,4 @@
-const { getFiles } = require('../get-files/get-files')
+const { getFiles } = require('../get-files')
 
 async function generateNodes(dir, fileNodeTree) {
     let files = await getFiles(dir); // get files + folders in directory.
