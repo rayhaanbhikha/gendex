@@ -17,7 +17,9 @@ jobs:
 
       - run: 
           name: check directory
-          command: ls -la
+          command: |
+            ls -la
+            echo ${CIRCLE_TAG}
 
       - restore_cache:
           keys:
@@ -49,7 +51,9 @@ jobs:
           at: ~/repo
       - run:
           name: "Deploy to npm"
-          command: echo "I AM DEPLOYING"
+          command: |
+            echo "I AM DEPLOYING"
+
       # - run:
       #     name: Authenticate with registry
       #     command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
@@ -65,4 +69,13 @@ workflows:
       - test:
           requires:
             - build
-      - deploy
+      - deploy:
+          requires:
+            - build
+            - test
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /^v.*/
+
