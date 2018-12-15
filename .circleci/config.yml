@@ -19,7 +19,7 @@ jobs:
           name: check directory
           command: |
             ls -la
-            echo ${CIRCLE_TAG}
+            echo $CIRCLE_TAG
 
       - restore_cache:
           keys:
