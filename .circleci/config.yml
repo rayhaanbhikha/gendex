@@ -37,7 +37,6 @@ jobs:
   test:
     <<: *defaults
     steps:
-      - checkout
       - attach_workspace:
           at: ~/repo
       - run:
@@ -59,10 +58,7 @@ workflows:
   version: 2
   test-deploy:
     jobs:
-      - build:
-          filters:
-            branches:
-              only: master
+      - build
       - test:
           requires:
             - build
