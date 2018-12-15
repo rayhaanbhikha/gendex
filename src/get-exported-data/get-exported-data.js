@@ -2,7 +2,7 @@ const fs = require('fs');
 const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
 const path = require('path');
-const checkJsVersion = require('../check-version')
+const { checkVersion: checkJsVersion } = require('../check-version')
 const { parseEs5 } = require('../es5')
 const { parseEs6 } = require('../es6')
 
