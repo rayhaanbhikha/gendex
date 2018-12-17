@@ -1,8 +1,6 @@
 gendex
 ===
 
-```gendex requires node v10.10.0```
-
 gendex is a cli tool that allows developers to organise `exports` from several JavaScript files in a given directory, into one 'master' `index.js` file.
 
 gendex works with jsx files as well and by default uses **ES6** when generating the `index.js` file. But can be configured to use **ES5** (Explained in Usage section).
