@@ -50,7 +50,7 @@ jobs:
           name: Publish package
           # command: npm publish
           command: |
-          echo $CIRCLE_TAG
+            echo $CIRCLE_TAG
 
             
 workflows:
