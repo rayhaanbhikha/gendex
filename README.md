@@ -10,7 +10,7 @@ gendex can be used in nested directories and will recursively build an `index.js
 Installation
 ===
 
-1) Either installing gendex globally using npm or yarn:
+1) Installing gendex globally using npm or yarn:
     ```sh
     npm install -g gendex
     ```
