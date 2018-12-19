@@ -48,7 +48,9 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
       - run:
           name: Publish package
-          command: npm publish
+          # command: npm publish
+          command: |
+          echo $CIRCLE_TAG
 
             
 workflows:
@@ -64,6 +66,7 @@ workflows:
             - build
             - test
           filters:
-            branches:
-              only: master
-
+            # branches:
+            #   only: master
+            tags:
+              only: /^v.*/
